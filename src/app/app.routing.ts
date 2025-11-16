@@ -18,6 +18,10 @@ const routes: Routes =[
       {
         path: '',
         loadChildren: () => import('src/app/layouts/admin-layout/admin-layout.module').then(m => m.AdminLayoutModule)
+      },
+      {
+        path: 'gestion',
+        loadChildren: () => import('./modules/gestion/gestion.module').then(m => m.GestionModule)
       }
     ]
   }, {
