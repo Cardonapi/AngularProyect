@@ -1,0 +1,75 @@
+<!-- src/app/modules/gestion/pedidos-list/pedidos-list.component.html -->
+<div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
+  <!-- ... mismo header que antes ... -->
+</div>
+
+<div class="container-fluid mt--7">
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header border-0">
+          <div class="row align-items-center">
+            <div class="col">
+              <h3 class="mb-0">Pedidos</h3>
+            </div>
+            <div class="col text-right">
+              <button class="btn btn-sm btn-primary" (click)="createPedido()">
+                <i class="fas fa-plus"></i> Nuevo Pedido
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="table-responsive" *ngIf="!loading">
+          <table class="table align-items-center table-flush">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Cliente ID</th>
+                <th scope="col">Menu ID</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">Total</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Moto ID</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let pedido of pedidos">
+                <th scope="row">
+                  <span class="mb-0 text-sm">#{{ pedido.id }}</span>
+                </th>
+                <td>{{ pedido.customer_id }}</td>
+                <td>{{ pedido.menu_id }}</td>
+                <td>{{ pedido.quantity }}</td>
+                <td>${{ pedido.total_price | number:'1.2-2' }}</td>
+                <td>
+                  <span class="badge badge-dot mr-4">
+                    <i [class]="getStatusBadgeClass(pedido.status)"></i>
+                    {{ getStatusText(pedido.status) }}
+                  </span>
+                </td>
+                <td>
+                  {{ pedido.motorcycle_id || 'No asignada' }}
+                </td>
+                <td class="text-right">
+                  <div ngbDropdown placement="bottom-right">
+                    <a class="btn btn-sm btn-icon-only text-light" ngbDropdownToggle>
+                      <i class="fas fa-ellipsis-v"></i>
+                    </a>
+                    <div ngbDropdownMenu class="dropdown-menu-right dropdown-menu-arrow">
+                      <a class="dropdown-item" (click)="editPedido(pedido.id!)">Editar</a>
+                      <a class="dropdown-item text-danger" (click)="deletePedido(pedido.id!)">Eliminar</a>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Loading y empty states igual que antes -->
+      </div>
+    </div>
+  </div>
+</div>

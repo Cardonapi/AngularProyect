@@ -1,0 +1,126 @@
+<!-- src/app/modules/gestion/pedido-form/pedido-form.component.html -->
+<div class="container-fluid mt--7">
+  <div class="row">
+    <div class="col-xl-8">
+      <div class="card bg-secondary shadow">
+        <div class="card-header bg-white border-0">
+          <div class="row align-items-center">
+            <div class="col-8">
+              <h3 class="mb-0">
+                {{ isEdit ? 'Editar Pedido' : 'Nuevo Pedido' }}
+              </h3>
+            </div>
+            <div class="col-4 text-right">
+              <button class="btn btn-sm btn-warning" (click)="goBack()">
+                <i class="fas fa-arrow-left"></i> Volver
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="pedidoForm" (ngSubmit)="onSubmit()">
+            <h6 class="heading-small text-muted mb-4">Información del Pedido</h6>
+            <div class="pl-lg-4">
+              
+              <!-- Cliente ID y Menú ID -->
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="customer_id">ID Cliente *</label>
+                    <input type="number" id="customer_id" class="form-control" 
+                           formControlName="customer_id" placeholder="ID del cliente" min="1">
+                    <div *ngIf="pedidoForm.get('customer_id')?.invalid && pedidoForm.get('customer_id')?.touched" 
+                         class="text-danger small">
+                      El ID del cliente es requerido
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="menu_id">ID Menú *</label>
+                    <input type="number" id="menu_id" class="form-control" 
+                           formControlName="menu_id" placeholder="ID del menú" min="1">
+                    <div *ngIf="pedidoForm.get('menu_id')?.invalid && pedidoForm.get('menu_id')?.touched" 
+                         class="text-danger small">
+                      El ID del menú es requerido
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Cantidad y Total -->
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="quantity">Cantidad *</label>
+                    <input type="number" id="quantity" class="form-control" 
+                           formControlName="quantity" placeholder="Cantidad" min="1">
+                    <div *ngIf="pedidoForm.get('quantity')?.invalid && pedidoForm.get('quantity')?.touched" 
+                         class="text-danger small">
+                      La cantidad debe ser al menos 1
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="total_price">Total</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">$</span>
+                      </div>
+                      <input type="number" id="total_price" class="form-control" 
+                             formControlName="total_price" readonly
+                             style="background-color: #f8f9fa;">
+                    </div>
+                    <small class="text-muted">Calculado automáticamente</small>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Moto ID y Estado -->
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="motorcycle_id">ID Moto (Opcional)</label>
+                    <input type="number" id="motorcycle_id" class="form-control" 
+                           formControlName="motorcycle_id" placeholder="ID de la moto" min="1">
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="status">Estado *</label>
+                    <select id="status" class="form-control" formControlName="status">
+                      <option value="">Seleccionar estado</option>
+                      <option value="pending">Pendiente</option>
+                      <option value="in_progress">En Progreso</option>
+                      <option value="delivered">Entregado</option>
+                      <option value="cancelled">Cancelado</option>
+                    </select>
+                    <div *ngIf="pedidoForm.get('status')?.invalid && pedidoForm.get('status')?.touched" 
+                         class="text-danger small">
+                      El estado es requerido
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            
+            <!-- Botones -->
+            <div class="text-center mt-4">
+              <button type="button" class="btn btn-warning mr-2" (click)="goBack()">
+                <i class="fas fa-times mr-1"></i> Cancelar
+              </button>
+              <button type="submit" class="btn btn-primary" 
+                      [disabled]="pedidoForm.invalid || loading">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm mr-2"></span>
+                <i class="fas" [class.fa-save]="!loading" [class.fa-spinner]="loading"></i>
+                {{ isEdit ? 'Actualizar' : 'Crear' }} Pedido
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
