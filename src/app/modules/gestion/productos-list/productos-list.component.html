@@ -1,0 +1,104 @@
+<!-- src/app/modules/gestion/productos-list/productos-list.component.html -->
+<div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row">
+        <div class="col-xl-3 col-lg-6">
+          <div class="card card-stats mb-4 mb-xl-0">
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <h5 class="card-title text-uppercase text-muted mb-0">Total Productos</h5>
+                  <span class="h2 font-weight-bold mb-0">{{productos.length}}</span>
+                </div>
+                <div class="col-auto">
+                  <div class="icon icon-shape bg-primary text-white rounded-circle shadow">
+                    <i class="fas fa-box"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid mt--7">
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header border-0">
+          <div class="row align-items-center">
+            <div class="col">
+              <h3 class="mb-0">Productos</h3>
+            </div>
+            <div class="col text-right">
+              <button class="btn btn-sm btn-primary" (click)="createProducto()">
+                <i class="fas fa-plus"></i> Nuevo Producto
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="table-responsive" *ngIf="!loading && productos.length > 0">
+          <table class="table align-items-center table-flush">
+            <thead class="thead-light">
+              <tr>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Categoría</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let producto of productos">
+                <td>
+                  <div class="media align-items-center">
+                    <a class="avatar rounded-circle mr-3 bg-info text-white d-flex align-items-center justify-content-center" 
+                       style="width: 48px; height: 48px;">
+                      <i class="fas fa-box"></i>
+                    </a>
+                    <div class="media-body">
+                      <span class="mb-0 text-sm font-weight-bold">{{ producto.name }}</span>
+                    </div>
+                  </div>
+                </td>
+                <td>{{ producto.description }}</td>
+                <td>
+                  <span class="badge badge-success">${{ producto.price | number }}</span>
+                </td>
+                <td>
+                  <span class="badge badge-primary">{{ producto.category }}</span>
+                </td>
+                <td>
+                  <button class="btn btn-warning btn-sm mr-1" (click)="editProducto(producto.id)" title="Editar">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="btn btn-danger btn-sm" (click)="deleteProducto(producto.id)" title="Eliminar">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div *ngIf="loading" class="text-center py-4">
+          <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Cargando...</span>
+          </div>
+        </div>
+
+        <div *ngIf="!loading && productos.length === 0" class="text-center py-4">
+          <p class="text-muted">No hay productos registrados</p>
+          <button class="btn btn-primary" (click)="createProducto()">
+            <i class="fas fa-plus mr-1"></i> Crear primer producto
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
