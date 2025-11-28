@@ -1,0 +1,95 @@
+<!-- src/app/modules/gestion/menus-list/menus-list.component.html -->
+<div class="header bg-gradient-info pb-8 pt-5 pt-md-8">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row">
+        <div class="col-xl-3 col-lg-6">
+          <div class="card card-stats mb-4 mb-xl-0">
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <h5 class="card-title text-uppercase text-muted mb-0">Items en Menú</h5>
+                  <span class="h2 font-weight-bold mb-0">{{menus.length}}</span>
+                </div>
+                <div class="col-auto">
+                  <div class="icon icon-shape bg-info text-white rounded-circle shadow">
+                    <i class="fas fa-utensils"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid mt--7">
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header border-0">
+          <div class="row align-items-center">
+            <div class="col">
+              <h3 class="mb-0">Items del Menú</h3>
+            </div>
+            <div class="col text-right">
+              <button class="btn btn-sm btn-primary" (click)="createMenu()">
+                <i class="fas fa-plus"></i> Nuevo Item
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="table-responsive" *ngIf="!loading">
+          <table class="table align-items-center table-flush">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Restaurante ID</th>
+                <th scope="col">Producto ID</th>
+                <th scope="col">Precio</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let menu of menus">
+                <th scope="row">
+                  <span class="mb-0 text-sm">#{{ menu.id }}</span>
+                </th>
+                <td>{{ menu.restaurant_id }}</td>
+                <td>{{ menu.product_id }}</td>
+                <td>${{ menu.price | number:'1.2-2' }}</td>
+                <td class="text-right">
+                  <div ngbDropdown placement="bottom-right">
+                    <a class="btn btn-sm btn-icon-only text-light" ngbDropdownToggle>
+                      <i class="fas fa-ellipsis-v"></i>
+                    </a>
+                    <div ngbDropdownMenu class="dropdown-menu-right dropdown-menu-arrow">
+                      <a class="dropdown-item" (click)="editMenu(menu.id!)">Editar</a>
+                      <a class="dropdown-item text-danger" (click)="deleteMenu(menu.id!)">Eliminar</a>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div *ngIf="loading" class="text-center py-4">
+          <div class="spinner-border" role="status">
+            <span class="sr-only">Cargando...</span>
+          </div>
+        </div>
+
+        <div *ngIf="!loading && menus.length === 0" class="text-center py-4">
+          <p class="text-muted">No hay items en el menú</p>
+          <button class="btn btn-primary" (click)="createMenu()">
+            Agregar primer item
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

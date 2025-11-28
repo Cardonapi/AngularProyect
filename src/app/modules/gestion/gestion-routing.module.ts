@@ -11,6 +11,8 @@ import { ClientesListComponent } from './clientes-list/clientes-list.component';
 import { ClientesFormComponent } from './clientes-form/clientes-form.component';
 import { PedidoFormComponent } from './pedido-form/pedido-form.component';
 import { PedidosListComponent } from './pedidos-list/pedidos-list.component';
+import { MenusListComponent } from './menus-list/menus-list.component';
+import { MenuFormComponent } from './menus-form/menu-form.component';
 
 // Definir rutas
 const routes: Routes = [
@@ -34,6 +36,11 @@ const routes: Routes = [
   { path: 'pedidos/nuevo', component: PedidoFormComponent },
   { path: 'pedidos/editar/:id', component: PedidoFormComponent },
 
+
+  //Menus
+  { path: 'menus', component: MenusListComponent },
+  { path: 'menus/nuevo', component: MenuFormComponent },
+  { path: 'menus/editar/:id', component: MenuFormComponent },
   // Ruta por defecto
   { path: '', redirectTo: 'restaurantes', pathMatch: 'full' }
 ];

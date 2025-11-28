@@ -17,6 +17,7 @@ export const ROUTES: RouteInfo[] = [
     {path: '/gestion/productos', title: 'Productos', icon: 'ni-box-2 text-orange', class: ''},
     { path: '/gestion/clientes', title: 'Clientes', icon: 'ni-single-02 text-warning', class: '' },
     {path: '/gestion/pedidos', title: 'Pedidos', icon: 'ni-delivery-fast text-green', class: ''},
+    { path: '/gestion/menus', title: 'Menús', icon: 'ni-ungroup text-info', class: '' },
     { path: '/login', title: 'Login',  icon:'ni-key-25 text-info', class: '' },
     { path: '/register', title: 'Register',  icon:'ni-circle-08 text-pink', class: '' }
 ];

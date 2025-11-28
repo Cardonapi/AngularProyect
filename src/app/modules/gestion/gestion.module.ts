@@ -15,6 +15,9 @@ import { GestionRoutingModule } from './gestion-routing.module';
 
 import { PedidosListComponent } from './pedidos-list/pedidos-list.component';  // ← Nuevo
 import { PedidoFormComponent } from './pedido-form/pedido-form.component';      // ← Ya existe
+import { MenusListComponent } from './menus-list/menus-list.component';
+import { MenuFormComponent } from './menus-form/menu-form.component';
+
 
 @NgModule({
   declarations: [
@@ -25,7 +28,9 @@ import { PedidoFormComponent } from './pedido-form/pedido-form.component';      
     ClientesListComponent,    
     ClientesFormComponent,
     PedidosListComponent,     
-    PedidoFormComponent   
+    PedidoFormComponent,
+    MenusListComponent,
+    MenuFormComponent  
   ],
   imports: [
     CommonModule,
