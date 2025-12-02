@@ -1,1 +1,18 @@
 /* You can add global styles to this file, and also import other style files */
+#map {
+  width: 100% !important;
+  height: 600px !important;
+  position: relative !important;
+  display: block !important;
+}
+
+.map-wrapper {
+  width: 100% !important;
+  height: 600px !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.card-body {
+  overflow: visible !important;
+}

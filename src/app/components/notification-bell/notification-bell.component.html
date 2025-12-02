@@ -1,0 +1,10 @@
+<div class="nav-link position-relative" (click)="clear()">
+  <i class="ni ni-bell-55"></i>
+
+  <ng-container *ngIf="unread > 0">
+    <span class="badge badge-danger"
+          style="position:absolute; top:0; right:0;">
+      {{ unread }}
+    </span>
+  </ng-container>
+</div>
