@@ -37,7 +37,7 @@ import { ConductorFormComponent } from './conductores-form/conductor-form.compon
     MotosListComponent,
     MotoFormComponent,
     ConductoresListComponent,  // ← Asegúrate que esté
-    ConductorFormComponent 
+    ConductorFormComponent,
 
   ],
   imports: [
@@ -45,7 +45,7 @@ import { ConductorFormComponent } from './conductores-form/conductor-form.compon
     ReactiveFormsModule, // ✅ DEBE estar aquí para formularios
     RouterModule,
     NgbModule,
-    GestionRoutingModule
+    GestionRoutingModule,
   ]
 })
 export class GestionModule { }

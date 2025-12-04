@@ -6,38 +6,51 @@ import { Routes, RouterModule } from '@angular/router';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
 
-const routes: Routes =[
+const routes: Routes = [
   {
     path: '',
     redirectTo: 'dashboard',
     pathMatch: 'full',
-  }, {
+  },
+  {
     path: '',
     component: AdminLayoutComponent,
     children: [
       {
         path: '',
-        loadChildren: () => import('src/app/layouts/admin-layout/admin-layout.module').then(m => m.AdminLayoutModule)
+        loadChildren: () =>
+          import('./layouts/admin-layout/admin-layout.module').then(
+            (m) => m.AdminLayoutModule
+          ),
       },
       {
         path: 'gestion',
-        loadChildren: () => import('./modules/gestion/gestion.module').then(m => m.GestionModule)
-      }
-    ]
-  }, {
-    path: '',
+        loadChildren: () =>
+          import('./modules/gestion/gestion.module').then(
+            (m) => m.GestionModule
+          ),
+      },
+    ],
+  },
+  {
+    path: 'auth',  // 👈 CORREGIDO (antes era path '')
     component: AuthLayoutComponent,
     children: [
       {
         path: '',
-        loadChildren: () => import('src/app/layouts/auth-layout/auth-layout.module').then(m => m.AuthLayoutModule)
-      }
-    ]
-  }, {
+        loadChildren: () =>
+          import('./layouts/auth-layout/auth-layout.module').then(
+            (m) => m.AuthLayoutModule
+          ),
+      },
+    ],
+  },
+  {
     path: '**',
-    redirectTo: 'dashboard'
-  }
+    redirectTo: 'dashboard',
+  },
 ];
+
 
 @NgModule({
   imports: [
