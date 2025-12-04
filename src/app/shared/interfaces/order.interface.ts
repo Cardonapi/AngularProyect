@@ -1,33 +1,21 @@
-// src/app/interfaces/order.interface.ts
+import { Cliente } from "./cliente.interface";
+import { Menu } from "./menu.interface";
+import { Motorcycle } from "./motorcycle.interface";
+
+// src/app/shared/interfaces/order.interface.ts (o pedido.interface.ts)
 export interface Order {
   id?: number;
   customer_id: number;
   menu_id: number;
-  motorcycle_id?: number;
+  motorcycle_id?: number | null; // Hacerlo opcional
   quantity: number;
-  total_price: number;
-  status: 'pending' | 'in_progress' | 'delivered' | 'cancelled';
-  order_date?: string;
-}
-
-export interface Menu {
-  id?: number;
-  price: number;
-  restaurant_id: number;
-  product_id: number;
-}
-
-export interface Restaurantes {
-  id?: number;
-  name: string;
-  address: string;
-  phone: string;
-  email: string;
-}
-
-export interface Productos {
-  id?: number;
-  name: string;
-  description: string;
-  category: string;
+  total_price?: number; // Hacerlo opcional - el backend lo calcula
+  status: string;
+  created_at?: Date;
+  updated_at?: Date;
+  
+  // Relaciones (opcionales)
+  customer?: Cliente;
+  menu?: Menu;
+  motorcycle?: Motorcycle;
 }

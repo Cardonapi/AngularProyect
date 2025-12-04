@@ -18,7 +18,8 @@ export const ROUTES: RouteInfo[] = [
     {path: '/gestion/pedidos', title: 'Pedidos', icon: 'ni-delivery-fast text-green', class: ''},
     { path: '/gestion/menus', title: 'Menús', icon: 'ni-ungroup text-info', class: '' },
     { path: '/gestion/motos', title: 'Motos', icon: 'fas fa-motorcycle text-blue', class: '' },
-   {  path: '/gestion/conductores', title: 'Conductores', icon: 'ni ni-badge text-warning', class: '' },
+    { path: '/gestion/conductores', title: 'Conductores', icon: 'ni ni-badge text-warning', class: '' },
+    { path: '/gestion/turnos', title: 'Turnos', icon: 'ni ni-watch-time text-purple', class: '' },
     { path: '/login', title: 'Login',  icon:'ni-key-25 text-info', class: '' },
     { path: '/register', title: 'Register',  icon:'ni-circle-08 text-pink', class: '' }
 ];
