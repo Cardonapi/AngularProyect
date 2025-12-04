@@ -37,9 +37,10 @@ import { TurnoFormComponent } from './turnos-form/turno-form.component';
     MenuFormComponent,
     MotosListComponent,
     MotoFormComponent,
-    ConductoresListComponent,  // ← Asegúrate que esté
-    ConductorFormComponent 
-
+    ConductoresListComponent,
+    ConductorFormComponent,
+    TurnosListComponent,
+    TurnoFormComponent
   ],
   imports: [
     CommonModule,
