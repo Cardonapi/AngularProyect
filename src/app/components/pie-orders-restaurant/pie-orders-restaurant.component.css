@@ -1,0 +1,10 @@
+.grafica-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.chart {
+  width: 500px;
+  height: 400px;
+}

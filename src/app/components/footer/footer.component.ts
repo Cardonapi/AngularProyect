@@ -6,7 +6,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
   styleUrls: ['./footer.component.scss']
 })
 export class FooterComponent implements OnInit, OnDestroy {
-  test: Date = new Date();
+  currentYear: number = new Date().getFullYear();
 
   constructor() { }
 

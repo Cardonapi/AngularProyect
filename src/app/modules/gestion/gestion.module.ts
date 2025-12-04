@@ -38,9 +38,7 @@ import { TurnoFormComponent } from './turnos-form/turno-form.component';
     MotosListComponent,
     MotoFormComponent,
     ConductoresListComponent,  // ← Asegúrate que esté
-    ConductorFormComponent,
-    TurnosListComponent,
-    TurnoFormComponent
+    ConductorFormComponent 
 
   ],
   imports: [
@@ -48,7 +46,7 @@ import { TurnoFormComponent } from './turnos-form/turno-form.component';
     ReactiveFormsModule, // ✅ DEBE estar aquí para formularios
     RouterModule,
     NgbModule,
-    GestionRoutingModule
+    GestionRoutingModule,
   ]
 })
 export class GestionModule { }
