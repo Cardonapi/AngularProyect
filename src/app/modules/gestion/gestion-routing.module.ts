@@ -15,7 +15,10 @@ import { MenusListComponent } from './menus-list/menus-list.component';
 import { MenuFormComponent } from './menus-form/menu-form.component';
 import { MotosListComponent } from './motos-list/motos-list.component';
 import { MotoFormComponent } from './moto-form/moto-form.component';
-
+import { ConductoresListComponent } from './conductores-list/conductores-list.component'; // ← NUEVO
+import { ConductorFormComponent } from './conductores-form/conductor-form.component';   
+import { TurnosListComponent } from './turnos-list/turnos-list.component';
+import { TurnoFormComponent } from './turnos-form/turno-form.component';
 
 // Definir rutas
 const routes: Routes = [
@@ -50,8 +53,17 @@ const routes: Routes = [
   { path: 'motos/nuevo', component: MotoFormComponent },
   { path: 'motos/editar/:id', component: MotoFormComponent },
   
+//Conductores
+  { path: 'conductores', component: ConductoresListComponent },
+  { path: 'conductores/crear', component: ConductorFormComponent },
+  { path: 'conductores/editar/:id', component: ConductorFormComponent },
 
 
+//Turnos
+  // En gestion-routing.module.ts, agregar:
+    { path: 'turnos', component: TurnosListComponent },
+    { path: 'turnos/crear', component: TurnoFormComponent },
+    { path: 'turnos/editar/:id', component: TurnoFormComponent },
   // Ruta por defecto
   { path: '', redirectTo: 'restaurantes', pathMatch: 'full' }
 ];

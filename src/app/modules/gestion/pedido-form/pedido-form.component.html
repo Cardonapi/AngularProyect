@@ -18,88 +18,137 @@
           </div>
         </div>
         <div class="card-body">
-          <form [formGroup]="pedidoForm" (ngSubmit)="onSubmit()">
+          <!-- Spinner mientras cargan los datos -->
+          <div *ngIf="loadingData" class="text-center py-4">
+            <div class="spinner-border text-primary" role="status">
+              <span class="sr-only">Cargando...</span>
+            </div>
+            <p class="mt-2">Cargando datos...</p>
+          </div>
+
+          <form *ngIf="!loadingData" [formGroup]="pedidoForm" (ngSubmit)="onSubmit()">
             <h6 class="heading-small text-muted mb-4">Información del Pedido</h6>
             <div class="pl-lg-4">
               
-              <!-- Cliente ID y Menú ID -->
+              <!-- Cliente y Menú -->
               <div class="row">
                 <div class="col-lg-6">
                   <div class="form-group">
-                    <label class="form-control-label" for="customer_id">ID Cliente *</label>
-                    <input type="number" id="customer_id" class="form-control" 
-                           formControlName="customer_id" placeholder="ID del cliente" min="1">
+                    <label class="form-control-label" for="customer_id">Cliente *</label>
+                    <select id="customer_id" class="form-control" 
+                            formControlName="customer_id"
+                            [class.is-invalid]="pedidoForm.get('customer_id')?.invalid && pedidoForm.get('customer_id')?.touched">
+                      <option value="" disabled selected>Seleccione un cliente</option>
+                      <option *ngFor="let customer of customerOptions" 
+                              [value]="customer.value">
+                        {{ customer.label }}
+                      </option>
+                    </select>
                     <div *ngIf="pedidoForm.get('customer_id')?.invalid && pedidoForm.get('customer_id')?.touched" 
                          class="text-danger small">
-                      El ID del cliente es requerido
+                      <div *ngIf="pedidoForm.get('customer_id')?.errors?.['required']">
+                        Por favor seleccione un cliente
+                      </div>
                     </div>
+                    <small class="form-text text-muted">
+                      Seleccione el cliente que realiza el pedido
+                    </small>
                   </div>
                 </div>
                 <div class="col-lg-6">
                   <div class="form-group">
-                    <label class="form-control-label" for="menu_id">ID Menú *</label>
-                    <input type="number" id="menu_id" class="form-control" 
-                           formControlName="menu_id" placeholder="ID del menú" min="1">
+                    <label class="form-control-label" for="menu_id">Menú *</label>
+                    <select id="menu_id" class="form-control" 
+                            formControlName="menu_id"
+                            [class.is-invalid]="pedidoForm.get('menu_id')?.invalid && pedidoForm.get('menu_id')?.touched">
+                      <option value="" disabled selected>Seleccione un menú</option>
+                      <option *ngFor="let menu of menuOptions" 
+                              [value]="menu.value">
+                        {{ menu.label }}
+                      </option>
+                    </select>
                     <div *ngIf="pedidoForm.get('menu_id')?.invalid && pedidoForm.get('menu_id')?.touched" 
                          class="text-danger small">
-                      El ID del menú es requerido
+                      <div *ngIf="pedidoForm.get('menu_id')?.errors?.['required']">
+                        Por favor seleccione un menú
+                      </div>
                     </div>
+                    <small class="form-text text-muted">
+                      Seleccione el menú para este pedido
+                    </small>
                   </div>
                 </div>
               </div>
 
-              <!-- Cantidad y Total -->
+              <!-- Cantidad y Moto -->
               <div class="row">
                 <div class="col-lg-6">
                   <div class="form-group">
                     <label class="form-control-label" for="quantity">Cantidad *</label>
                     <input type="number" id="quantity" class="form-control" 
-                           formControlName="quantity" placeholder="Cantidad" min="1">
+                           formControlName="quantity" placeholder="Cantidad" min="1"
+                           [class.is-invalid]="pedidoForm.get('quantity')?.invalid && pedidoForm.get('quantity')?.touched">
                     <div *ngIf="pedidoForm.get('quantity')?.invalid && pedidoForm.get('quantity')?.touched" 
                          class="text-danger small">
-                      La cantidad debe ser al menos 1
+                      <div *ngIf="pedidoForm.get('quantity')?.errors?.['required']">
+                        La cantidad es requerida
+                      </div>
+                      <div *ngIf="pedidoForm.get('quantity')?.errors?.['min']">
+                        La cantidad debe ser al menos 1
+                      </div>
                     </div>
+                    <small class="form-text text-muted">
+                      Cantidad de items a pedir
+                    </small>
                   </div>
                 </div>
                 <div class="col-lg-6">
                   <div class="form-group">
-                    <label class="form-control-label" for="total_price">Total</label>
-                    <div class="input-group">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text">$</span>
-                      </div>
-                      <input type="number" id="total_price" class="form-control" 
-                             formControlName="total_price" readonly
-                             style="background-color: #f8f9fa;">
-                    </div>
-                    <small class="text-muted">Calculado automáticamente</small>
+                    <label class="form-control-label" for="motorcycle_id">Moto asignada (Opcional)</label>
+                    <select id="motorcycle_id" class="form-control" 
+                            formControlName="motorcycle_id">
+                      <option *ngFor="let motorcycle of motorcycleOptions" 
+                              [value]="motorcycle.value">
+                        {{ motorcycle.label }}
+                      </option>
+                    </select>
+                    <small class="form-text text-muted">
+                      Seleccione una moto para la entrega (opcional)
+                    </small>
                   </div>
                 </div>
               </div>
 
-              <!-- Moto ID y Estado -->
+              <!-- Estado -->
               <div class="row">
                 <div class="col-lg-6">
                   <div class="form-group">
-                    <label class="form-control-label" for="motorcycle_id">ID Moto (Opcional)</label>
-                    <input type="number" id="motorcycle_id" class="form-control" 
-                           formControlName="motorcycle_id" placeholder="ID de la moto" min="1">
-                  </div>
-                </div>
-                <div class="col-lg-6">
-                  <div class="form-group">
                     <label class="form-control-label" for="status">Estado *</label>
-                    <select id="status" class="form-control" formControlName="status">
-                      <option value="">Seleccionar estado</option>
-                      <option value="pending">Pendiente</option>
-                      <option value="in_progress">En Progreso</option>
-                      <option value="delivered">Entregado</option>
-                      <option value="cancelled">Cancelado</option>
+                    <select id="status" class="form-control" 
+                            formControlName="status"
+                            [class.is-invalid]="pedidoForm.get('status')?.invalid && pedidoForm.get('status')?.touched">
+                      <option value="" disabled>Seleccionar estado</option>
+                      <option *ngFor="let status of statusOptions" 
+                              [value]="status.value">
+                        {{ status.label }}
+                      </option>
                     </select>
                     <div *ngIf="pedidoForm.get('status')?.invalid && pedidoForm.get('status')?.touched" 
                          class="text-danger small">
-                      El estado es requerido
+                      <div *ngIf="pedidoForm.get('status')?.errors?.['required']">
+                        El estado es requerido
+                      </div>
                     </div>
+                    <small class="form-text text-muted">
+                      Estado actual del pedido
+                    </small>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="alert alert-info mt-4">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Nota:</strong> El precio total será calculado automáticamente por el sistema
+                    (Precio del menú × Cantidad)
                   </div>
                 </div>
               </div>
@@ -112,7 +161,7 @@
                 <i class="fas fa-times mr-1"></i> Cancelar
               </button>
               <button type="submit" class="btn btn-primary" 
-                      [disabled]="pedidoForm.invalid || loading">
+                      [disabled]="pedidoForm.invalid || loading || loadingData">
                 <span *ngIf="loading" class="spinner-border spinner-border-sm mr-2"></span>
                 <i class="fas" [class.fa-save]="!loading" [class.fa-spinner]="loading"></i>
                 {{ isEdit ? 'Actualizar' : 'Crear' }} Pedido

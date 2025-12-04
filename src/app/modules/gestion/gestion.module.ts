@@ -21,7 +21,8 @@ import { MotosListComponent } from './motos-list/motos-list.component';
 import { MotoFormComponent } from './moto-form/moto-form.component';
 import { ConductoresListComponent } from './conductores-list/conductores-list.component';
 import { ConductorFormComponent } from './conductores-form/conductor-form.component';
-
+import { TurnosListComponent } from './turnos-list/turnos-list.component';
+import { TurnoFormComponent } from './turnos-form/turno-form.component';
 @NgModule({
   declarations: [
     RestaurantesListComponent,
@@ -37,7 +38,7 @@ import { ConductorFormComponent } from './conductores-form/conductor-form.compon
     MotosListComponent,
     MotoFormComponent,
     ConductoresListComponent,  // ← Asegúrate que esté
-    ConductorFormComponent,
+    ConductorFormComponent 
 
   ],
   imports: [

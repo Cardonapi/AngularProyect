@@ -32,4 +32,15 @@ export class MotorcycleService {
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+  // Añade este método
+  getAvailable(): Observable<Motorcycle[]> {
+    // Si tu backend tiene endpoint /available
+    return this.http.get<Motorcycle[]>(`${this.apiUrl}/available`);
+    
+    // O si no tiene, usa getAll() y filtra localmente
+    // return this.getAll().pipe(
+    //   map(motorcycles => motorcycles.filter(moto => moto.status === 'available'))
+    // );
+  }
 }
