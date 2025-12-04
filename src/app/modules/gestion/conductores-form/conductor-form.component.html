@@ -1,0 +1,120 @@
+<!-- src/app/modules/gestion/conductor-form/conductor-form.component.html -->
+<div class="container-fluid mt--7">
+  <div class="row">
+    <div class="col-xl-8">
+      <div class="card bg-secondary shadow">
+        <div class="card-header bg-white border-0">
+          <div class="row align-items-center">
+            <div class="col-8">
+              <h3 class="mb-0">
+                {{ isEdit ? 'Editar Conductor' : 'Nuevo Conductor' }}
+              </h3>
+            </div>
+            <div class="col-4 text-right">
+              <button class="btn btn-sm btn-warning" (click)="goBack()">
+                <i class="fas fa-arrow-left"></i> Volver
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="conductorForm" (ngSubmit)="onSubmit()">
+            <h6 class="heading-small text-muted mb-4">Información del Conductor</h6>
+            <div class="pl-lg-4">
+              
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="form-group">
+                    <label class="form-control-label" for="name">Nombre *</label>
+                    <input 
+                      type="text" 
+                      id="name" 
+                      class="form-control" 
+                      formControlName="name"
+                      placeholder="Nombre completo">
+                    <div *ngIf="conductorForm.get('name')?.invalid && conductorForm.get('name')?.touched" 
+                         class="text-danger small">
+                      El nombre es requerido (mínimo 3 caracteres)
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="email">Email *</label>
+                    <input 
+                      type="email" 
+                      id="email" 
+                      class="form-control" 
+                      formControlName="email"
+                      placeholder="correo@ejemplo.com">
+                    <div *ngIf="conductorForm.get('email')?.invalid && conductorForm.get('email')?.touched" 
+                         class="text-danger small">
+                      Ingrese un email válido
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="phone">Teléfono *</label>
+                    <input 
+                      type="text" 
+                      id="phone" 
+                      class="form-control" 
+                      formControlName="phone"
+                      placeholder="+57 300 123 4567">
+                    <div *ngIf="conductorForm.get('phone')?.invalid && conductorForm.get('phone')?.touched" 
+                         class="text-danger small">
+                      Ingrese un teléfono válido
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="license_number">Número de Licencia *</label>
+                    <input 
+                      type="text" 
+                      id="license_number" 
+                      class="form-control" 
+                      formControlName="license_number"
+                      placeholder="ABC123">
+                    <div *ngIf="conductorForm.get('license_number')?.invalid && conductorForm.get('license_number')?.touched" 
+                         class="text-danger small">
+                      La licencia es requerida (mínimo 5 caracteres)
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="status">Estado *</label>
+                    <select id="status" class="form-control" formControlName="status">
+                      <option value="available">Disponible</option>
+                      <option value="unavailable">No Disponible</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            
+            <div class="text-center mt-4">
+              <button type="button" class="btn btn-warning mr-2" (click)="goBack()">
+                <i class="fas fa-times mr-1"></i> Cancelar
+              </button>
+              <button type="submit" class="btn btn-primary" [disabled]="conductorForm.invalid || loading">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm mr-2"></span>
+                <i class="fas fa-save mr-1"></i>
+                {{ isEdit ? 'Actualizar' : 'Crear' }} Conductor
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
