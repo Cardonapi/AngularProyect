@@ -1,0 +1,179 @@
+<!-- src/app/modules/gestion/moto-form/moto-form.component.html -->
+<div class="container-fluid mt--7">
+  <div class="row">
+    <div class="col-xl-8">
+      <div class="card bg-secondary shadow">
+        <div class="card-header bg-white border-0">
+          <div class="row align-items-center">
+            <div class="col-8">
+              <h3 class="mb-0">
+                {{ isEdit ? 'Editar Moto' : 'Nueva Moto' }}
+              </h3>
+            </div>
+            <div class="col-4 text-right">
+              <button class="btn btn-sm btn-warning" (click)="goBack()">
+                <i class="fas fa-arrow-left"></i> Volver
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="motoForm" (ngSubmit)="onSubmit()">
+            <h6 class="heading-small text-muted mb-4">Información de la Moto</h6>
+            <div class="pl-lg-4">
+              
+              <!-- Placa y Marca -->
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="license_plate">Placa *</label>
+                    <input 
+                      type="text" 
+                      id="license_plate" 
+                      class="form-control" 
+                      formControlName="license_plate"
+                      placeholder="ABC123">
+                    <div *ngIf="motoForm.get('license_plate')?.invalid && motoForm.get('license_plate')?.touched" 
+                         class="text-danger small">
+                      <div *ngIf="motoForm.get('license_plate')?.errors?.['required']">
+                        La placa es requerida
+                      </div>
+                      <div *ngIf="motoForm.get('license_plate')?.errors?.['minlength']">
+                        Mínimo 6 caracteres
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="brand">Marca *</label>
+                    <select 
+                      id="brand" 
+                      class="form-control" 
+                      formControlName="brand">
+                      <option value="">Seleccionar marca</option>
+                      <option *ngFor="let marca of marcas" [value]="marca">
+                        {{ marca }}
+                      </option>
+                    </select>
+                    <div *ngIf="motoForm.get('brand')?.invalid && motoForm.get('brand')?.touched" 
+                         class="text-danger small">
+                      La marca es requerida
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Modelo y Año -->
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="model">Modelo *</label>
+                    <input 
+                      type="text" 
+                      id="model" 
+                      class="form-control" 
+                      formControlName="model"
+                      placeholder="Modelo de la moto">
+                    <div *ngIf="motoForm.get('model')?.invalid && motoForm.get('model')?.touched" 
+                         class="text-danger small">
+                      <div *ngIf="motoForm.get('model')?.errors?.['required']">
+                        El modelo es requerido
+                      </div>
+                      <div *ngIf="motoForm.get('model')?.errors?.['minlength']">
+                        Mínimo 2 caracteres
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="year">Año *</label>
+                    <input 
+                      type="number" 
+                      id="year" 
+                      class="form-control" 
+                      formControlName="year"
+                      placeholder="2024"
+                      [min]="2000"
+                      [max]="currentYear">
+                    <div *ngIf="motoForm.get('year')?.invalid && motoForm.get('year')?.touched" 
+                         class="text-danger small">
+                      <div *ngIf="motoForm.get('year')?.errors?.['required']">
+                        El año es requerido
+                      </div>
+                      <div *ngIf="motoForm.get('year')?.errors?.['min'] || motoForm.get('year')?.errors?.['max']">
+                        El año debe estar entre 2000 y {{ currentYear }} <!-- ← Usa la propiedad -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Color y Estado -->
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="color">Color *</label>
+                    <select 
+                      id="color" 
+                      class="form-control" 
+                      formControlName="color">
+                      <option value="">Seleccionar color</option>
+                      <option *ngFor="let color of colores" [value]="color">
+                        {{ color }}
+                      </option>
+                    </select>
+                    <div *ngIf="motoForm.get('color')?.invalid && motoForm.get('color')?.touched" 
+                         class="text-danger small">
+                      El color es requerido
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="status">Estado *</label>
+                    <select 
+                      id="status" 
+                      class="form-control" 
+                      formControlName="status">
+                      <option *ngFor="let estado of estados" [value]="estado.value">
+                        {{ estado.label }}
+                      </option>
+                    </select>
+                    <div *ngIf="motoForm.get('status')?.invalid && motoForm.get('status')?.touched" 
+                         class="text-danger small">
+                      El estado es requerido
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            
+            <!-- Botones -->
+            <div class="text-center mt-4">
+              <button 
+                type="button" 
+                class="btn btn-warning mr-2" 
+                (click)="goBack()">
+                <i class="fas fa-times mr-1"></i> Cancelar
+              </button>
+              <button 
+                type="submit" 
+                class="btn btn-primary" 
+                [disabled]="motoForm.invalid || loading">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm mr-2"></span>
+                <i class="fas" [class.fa-save]="!loading" [class.fa-spinner]="loading"></i>
+                {{ isEdit ? 'Actualizar' : 'Crear' }} Moto
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

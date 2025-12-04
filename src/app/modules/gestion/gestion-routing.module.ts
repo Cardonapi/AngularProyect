@@ -13,6 +13,9 @@ import { PedidoFormComponent } from './pedido-form/pedido-form.component';
 import { PedidosListComponent } from './pedidos-list/pedidos-list.component';
 import { MenusListComponent } from './menus-list/menus-list.component';
 import { MenuFormComponent } from './menus-form/menu-form.component';
+import { MotosListComponent } from './motos-list/motos-list.component';
+import { MotoFormComponent } from './moto-form/moto-form.component';
+
 
 // Definir rutas
 const routes: Routes = [
@@ -41,9 +44,19 @@ const routes: Routes = [
   { path: 'menus', component: MenusListComponent },
   { path: 'menus/nuevo', component: MenuFormComponent },
   { path: 'menus/editar/:id', component: MenuFormComponent },
+
+  // Motos
+  { path: 'motos', component: MotosListComponent },
+  { path: 'motos/nuevo', component: MotoFormComponent },
+  { path: 'motos/editar/:id', component: MotoFormComponent },
+  
+
+
   // Ruta por defecto
   { path: '', redirectTo: 'restaurantes', pathMatch: 'full' }
 ];
+
+
 
 // Exportar el módulo
 @NgModule({

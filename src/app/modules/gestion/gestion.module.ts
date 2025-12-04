@@ -17,7 +17,8 @@ import { PedidosListComponent } from './pedidos-list/pedidos-list.component';  /
 import { PedidoFormComponent } from './pedido-form/pedido-form.component';      // ← Ya existe
 import { MenusListComponent } from './menus-list/menus-list.component';
 import { MenuFormComponent } from './menus-form/menu-form.component';
-
+import { MotosListComponent } from './motos-list/motos-list.component';
+import { MotoFormComponent } from './moto-form/moto-form.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,10 @@ import { MenuFormComponent } from './menus-form/menu-form.component';
     PedidosListComponent,     
     PedidoFormComponent,
     MenusListComponent,
-    MenuFormComponent  
+    MenuFormComponent,
+    MotosListComponent,
+    MotoFormComponent,
+
   ],
   imports: [
     CommonModule,

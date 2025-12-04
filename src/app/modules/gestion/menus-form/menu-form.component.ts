@@ -4,6 +4,13 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Menu } from '../../../shared/interfaces/menu.interface';
 import { MenuService } from '../../../shared/services/menu.service';
+import { RestauranteService } from '../../../shared/services/restaurante.service';
+import { ProductoService } from 'src/app/shared/services/producto.service';
+
+interface SelectOption {
+  value: number;
+  label: string;
+}
 
 @Component({
   selector: 'app-menu-form',
@@ -14,21 +21,31 @@ export class MenuFormComponent implements OnInit {
   isEdit = false;
   menuId: number | null = null;
   loading = false;
+  loadingData = false;
+
+  // Arrays para los selects
+  restaurantOptions: SelectOption[] = [];
+  productOptions: SelectOption[] = [];
 
   constructor(
     private fb: FormBuilder,
     private menuService: MenuService,
+    private restaurantService: RestauranteService,
+    private productService: ProductoService,
     private route: ActivatedRoute,
     private router: Router
   ) {
     this.menuForm = this.fb.group({
-      restaurant_id: [null, [Validators.required, Validators.min(1)]],
-      product_id: [null, [Validators.required, Validators.min(1)]],
+      restaurant_id: [null, [Validators.required]],
+      product_id: [null, [Validators.required]],
       price: [0, [Validators.required, Validators.min(0.01)]]
     });
   }
 
   ngOnInit(): void {
+    this.loadRestaurants();
+    this.loadProducts();
+    
     this.route.params.subscribe(params => {
       if (params['id']) {
         this.isEdit = true;
@@ -38,15 +55,54 @@ export class MenuFormComponent implements OnInit {
     });
   }
 
+  loadRestaurants(): void {
+    this.loadingData = true;
+    this.restaurantService.getAll().subscribe({
+      next: (restaurants) => {
+        this.restaurantOptions = restaurants.map(restaurant => ({
+          value: restaurant.id,
+          label: restaurant.name || `Restaurante ${restaurant.id}`
+        }));
+        this.loadingData = false;
+      },
+      error: (error) => {
+        console.error('Error al cargar restaurantes:', error);
+        this.loadingData = false;
+        alert('Error al cargar la lista de restaurantes');
+      }
+    });
+  }
+
+  loadProducts(): void {
+    this.loadingData = true;
+    this.productService.getAll().subscribe({
+      next: (products) => {
+        this.productOptions = products.map(product => ({
+          value: product.id,
+          label: product.name || `Producto ${product.id}`
+        }));
+        this.loadingData = false;
+      },
+      error: (error) => {
+        console.error('Error al cargar productos:', error);
+        this.loadingData = false;
+        alert('Error al cargar la lista de productos');
+      }
+    });
+  }
+
   loadMenu(): void {
     if (this.menuId) {
+      this.loading = true;
       this.menuService.getById(this.menuId).subscribe({
         next: (menu) => {
           this.menuForm.patchValue(menu);
+          this.loading = false;
         },
         error: (error) => {
           console.error('Error:', error);
           alert('Error al cargar el item del menú');
+          this.loading = false;
         }
       });
     }

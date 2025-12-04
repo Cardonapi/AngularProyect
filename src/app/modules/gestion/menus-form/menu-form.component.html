@@ -18,53 +18,70 @@
           </div>
         </div>
         <div class="card-body">
-          <form [formGroup]="menuForm" (ngSubmit)="onSubmit()">
+          <!-- Spinner mientras cargan los datos -->
+          <div *ngIf="loadingData" class="text-center py-4">
+            <div class="spinner-border text-primary" role="status">
+              <span class="sr-only">Cargando...</span>
+            </div>
+            <p class="mt-2">Cargando datos...</p>
+          </div>
+
+          <form *ngIf="!loadingData" [formGroup]="menuForm" (ngSubmit)="onSubmit()">
             <h6 class="heading-small text-muted mb-4">Información del Item</h6>
             <div class="pl-lg-4">
               
-              <!-- Restaurante ID y Producto ID -->
+              <!-- Restaurante -->
               <div class="row">
                 <div class="col-lg-6">
                   <div class="form-group">
-                    <label class="form-control-label" for="restaurant_id">ID Restaurante *</label>
-                    <input 
-                      type="number" 
+                    <label class="form-control-label" for="restaurant_id">Restaurante *</label>
+                    <select 
                       id="restaurant_id" 
                       class="form-control" 
                       formControlName="restaurant_id"
-                      placeholder="ID del restaurante"
-                      min="1">
+                      [class.is-invalid]="menuForm.get('restaurant_id')?.invalid && menuForm.get('restaurant_id')?.touched">
+                      <option value="" disabled selected>Seleccione un restaurante</option>
+                      <option *ngFor="let restaurant of restaurantOptions" 
+                              [value]="restaurant.value">
+                        {{ restaurant.label }}
+                      </option>
+                    </select>
                     <div *ngIf="menuForm.get('restaurant_id')?.invalid && menuForm.get('restaurant_id')?.touched" 
                          class="text-danger small">
                       <div *ngIf="menuForm.get('restaurant_id')?.errors?.['required']">
-                        El ID del restaurante es requerido
-                      </div>
-                      <div *ngIf="menuForm.get('restaurant_id')?.errors?.['min']">
-                        El ID debe ser mayor a 0
+                        Por favor seleccione un restaurante
                       </div>
                     </div>
+                    <small class="form-text text-muted">
+                      Seleccione el restaurante al que pertenece este item
+                    </small>
                   </div>
                 </div>
 
+                <!-- Producto -->
                 <div class="col-lg-6">
                   <div class="form-group">
-                    <label class="form-control-label" for="product_id">ID Producto *</label>
-                    <input 
-                      type="number" 
+                    <label class="form-control-label" for="product_id">Producto *</label>
+                    <select 
                       id="product_id" 
                       class="form-control" 
                       formControlName="product_id"
-                      placeholder="ID del producto"
-                      min="1">
+                      [class.is-invalid]="menuForm.get('product_id')?.invalid && menuForm.get('product_id')?.touched">
+                      <option value="" disabled selected>Seleccione un producto</option>
+                      <option *ngFor="let product of productOptions" 
+                              [value]="product.value">
+                        {{ product.label }}
+                      </option>
+                    </select>
                     <div *ngIf="menuForm.get('product_id')?.invalid && menuForm.get('product_id')?.touched" 
                          class="text-danger small">
                       <div *ngIf="menuForm.get('product_id')?.errors?.['required']">
-                        El ID del producto es requerido
-                      </div>
-                      <div *ngIf="menuForm.get('product_id')?.errors?.['min']">
-                        El ID debe ser mayor a 0
+                        Por favor seleccione un producto
                       </div>
                     </div>
+                    <small class="form-text text-muted">
+                      Seleccione el producto que desea agregar al menú
+                    </small>
                   </div>
                 </div>
               </div>
@@ -96,6 +113,9 @@
                         El precio debe ser mayor a 0
                       </div>
                     </div>
+                    <small class="form-text text-muted">
+                      Ingrese el precio en el que se venderá este producto
+                    </small>
                   </div>
                 </div>
               </div>
@@ -113,7 +133,7 @@
               <button 
                 type="submit" 
                 class="btn btn-primary" 
-                [disabled]="menuForm.invalid || loading">
+                [disabled]="menuForm.invalid || loading || loadingData">
                 <span *ngIf="loading" class="spinner-border spinner-border-sm mr-2"></span>
                 <i class="fas" [class.fa-save]="!loading" [class.fa-spinner]="loading"></i>
                 {{ isEdit ? 'Actualizar' : 'Crear' }} Item
