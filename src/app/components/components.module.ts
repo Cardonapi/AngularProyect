@@ -5,6 +5,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { FooterComponent } from './footer/footer.component';
 import { RouterModule } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule } from '@angular/forms';
 import { NotificationBellComponent } from './notification-bell/notification-bell.component';
 import { PieOrdersRestaurantComponent } from './pie-orders-restaurant/pie-orders-restaurant.component';
 import { PieOrdersStatusComponent } from './pie-orders-by-status/pie-orders-by-status.component';
@@ -17,6 +18,7 @@ import { BarDriversActivityComponent } from './bar-drivers-activity/bar-drivers-
 import { LineDeliveriesPerMonthComponent } from './line-deliveries-per-month/line-deliveries-per-month.component';
 import { LineIncomePerMonthComponent } from './line-income-per-month/line-income-per-month.component';
 import { LineAvgDeliveryTimeComponent } from './line-avg-delivery-time/line-avg-delivery-time.component';
+import { ChatbotComponent } from './chatbot/chatbot.component';
 
 
 @NgModule({
@@ -24,6 +26,7 @@ import { LineAvgDeliveryTimeComponent } from './line-avg-delivery-time/line-avg-
     CommonModule,
     RouterModule,
     NgbModule,
+    FormsModule,
     NgxEchartsModule.forRoot({ echarts })
   ],
   declarations: [
@@ -35,8 +38,12 @@ import { LineAvgDeliveryTimeComponent } from './line-avg-delivery-time/line-avg-
     PieOrdersStatusComponent,
     PiePaymentMethodsComponent, 
     BarOrdersPerDayComponent, 
-    BarProductsMostSoldComponent, BarDriversActivityComponent, LineDeliveriesPerMonthComponent, LineIncomePerMonthComponent, LineAvgDeliveryTimeComponent,
-    
+    BarProductsMostSoldComponent, 
+    BarDriversActivityComponent, 
+    LineDeliveriesPerMonthComponent, 
+    LineIncomePerMonthComponent, 
+    LineAvgDeliveryTimeComponent,
+    ChatbotComponent
   ],
   exports: [
     FooterComponent,
@@ -51,7 +58,8 @@ import { LineAvgDeliveryTimeComponent } from './line-avg-delivery-time/line-avg-
     BarDriversActivityComponent,
     LineDeliveriesPerMonthComponent,
     LineIncomePerMonthComponent,
-    LineAvgDeliveryTimeComponent
+    LineAvgDeliveryTimeComponent,
+    ChatbotComponent
   ]
 })
 export class ComponentsModule { }

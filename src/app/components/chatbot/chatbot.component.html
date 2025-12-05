@@ -1,0 +1,114 @@
+<!-- Botón flotante del chatbot -->
+<div class="chatbot-fab" *ngIf="!isOpen" (click)="toggleChat()">
+    <i class="fas fa-comments"></i>
+    <span class="pulse-ring"></span>
+</div>
+
+<!-- Ventana del chatbot -->
+<div class="chatbot-window" [class.open]="isOpen" [class.minimized]="isMinimized">
+<!-- Header -->
+    <div class="chatbot-header">
+        <div class="chatbot-header-content">
+        <div class="chatbot-avatar">
+            <i class="fas fa-robot"></i>
+        </div>
+        <div class="chatbot-info">
+            <h5 class="mb-0">Asistente Virtual</h5>
+            <small class="text-success">
+            <i class="fas fa-circle"></i> En línea
+            </small>
+        </div>
+        </div>
+        <div class="chatbot-actions">
+        <button class="btn-action" (click)="minimizeChat()" title="Minimizar">
+            <i class="fas" [class.fa-window-minimize]="!isMinimized" [class.fa-window-maximize]="isMinimized"></i>
+        </button>
+        <button class="btn-action" (click)="clearChat()" title="Limpiar chat">
+            <i class="fas fa-trash"></i>
+        </button>
+        <button class="btn-action" (click)="closeChat()" title="Cerrar">
+            <i class="fas fa-times"></i>
+        </button>
+        </div>
+    </div>
+
+    <!-- Cuerpo del chat -->
+    <div class="chatbot-body" *ngIf="!isMinimized">
+        <!-- Preguntas rápidas -->
+        <div class="quick-questions" *ngIf="messages.length <= 1">
+        <p class="text-muted mb-2"><small>Preguntas frecuentes:</small></p>
+        <button class="btn-quick-question" (click)="askPredefinedQuestion('¿Para qué sirve este sistema?')">
+            ¿Para qué sirve este sistema?
+        </button>
+        <button class="btn-quick-question" (click)="askPredefinedQuestion('¿Dónde puedo registrar un nuevo conductor?')">
+            ¿Dónde registrar un conductor?
+        </button>
+        <button class="btn-quick-question" (click)="askPredefinedQuestion('¿En qué parte puedo realizar un pedido?')">
+            ¿Cómo realizar un pedido?
+        </button>
+        <button class="btn-quick-question" (click)="askPredefinedQuestion('¿Cómo ver el mapa de entregas?')">
+            ¿Ver mapa de entregas?
+        </button>
+        </div>
+
+        <!-- Contenedor de mensajes -->
+        <div class="chat-messages" #chatContainer>
+        <div *ngFor="let message of messages" 
+            class="message" 
+            [class.user-message]="message.role === 'user'"
+            [class.bot-message]="message.role === 'bot'">
+            
+            <div class="message-avatar" *ngIf="message.role === 'bot'">
+            <i class="fas fa-robot"></i>
+            </div>
+            
+            <div class="message-content">
+            <div class="message-bubble">
+                {{ message.content }}
+            </div>
+            <small class="message-time">
+                {{ message.timestamp | date:'short' }}
+            </small>
+            </div>
+
+            <div class="message-avatar" *ngIf="message.role === 'user'">
+            <i class="fas fa-user"></i>
+            </div>
+        </div>
+
+        <!-- Indicador de escritura -->
+        <div class="message bot-message" *ngIf="isTyping">
+            <div class="message-avatar">
+            <i class="fas fa-robot"></i>
+            </div>
+            <div class="message-content">
+            <div class="message-bubble">
+                <div class="typing-indicator">
+                <span></span>
+                <span></span>
+                <span></span>
+                </div>
+            </div>
+            </div>
+        </div>
+        </div>
+
+        <!-- Input de mensaje -->
+        <div class="chat-input">
+        <textarea 
+            [(ngModel)]="userMessage"
+            (keypress)="onKeyPress($event)"
+            placeholder="Escribe tu pregunta..."
+            rows="1"
+            [disabled]="isTyping"
+        ></textarea>
+        <button 
+            class="btn-send" 
+            (click)="sendMessage()"
+            [disabled]="!userMessage.trim() || isTyping"
+        >
+            <i class="fas fa-paper-plane"></i>
+        </button>
+        </div>
+    </div>
+</div>
