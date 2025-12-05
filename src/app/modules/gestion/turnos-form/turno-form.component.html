@@ -18,7 +18,15 @@
           </div>
         </div>
         <div class="card-body">
-          <form [formGroup]="turnoForm" (ngSubmit)="onSubmit()">
+          <!-- Spinner mientras cargan los datos -->
+          <div *ngIf="loadingData" class="text-center py-4">
+            <div class="spinner-border text-primary" role="status">
+              <span class="sr-only">Cargando...</span>
+            </div>
+            <p class="mt-2">Cargando datos...</p>
+          </div>
+
+          <form *ngIf="!loadingData" [formGroup]="turnoForm" (ngSubmit)="onSubmit()">
             <h6 class="heading-small text-muted mb-4">Información del Turno</h6>
             <div class="pl-lg-4">
               
@@ -26,64 +34,85 @@
               <div class="row">
                 <div class="col-lg-6">
                   <div class="form-group">
-                    <label class="form-control-label" for="driver_id">ID Conductor *</label>
-                    <input 
-                      type="number" 
-                      id="driver_id" 
-                      class="form-control" 
-                      formControlName="driver_id"
-                      placeholder="ID del conductor"
-                      min="1">
+                    <label class="form-control-label" for="driver_id">Conductor *</label>
+                    <select id="driver_id" class="form-control" 
+                            formControlName="driver_id"
+                            [class.is-invalid]="turnoForm.get('driver_id')?.invalid && turnoForm.get('driver_id')?.touched">
+                      <option value="" disabled selected>Seleccione un conductor</option>
+                      <option *ngFor="let driver of driverOptions" 
+                              [value]="driver.value">
+                        {{ driver.label }}
+                      </option>
+                    </select>
                     <div *ngIf="turnoForm.get('driver_id')?.invalid && turnoForm.get('driver_id')?.touched" 
                          class="text-danger small">
-                      El ID del conductor es requerido
+                      <div *ngIf="turnoForm.get('driver_id')?.errors?.['required']">
+                        Por favor seleccione un conductor
+                      </div>
                     </div>
+                    <div *ngIf="driverOptions.length === 0" class="text-warning small">
+                      ⚠️ No hay conductores disponibles
+                    </div>
+                    <small class="form-text text-muted">
+                      Seleccione el conductor asignado al turno
+                    </small>
                   </div>
                 </div>
-
                 <div class="col-lg-6">
                   <div class="form-group">
-                    <label class="form-control-label" for="motorcycle_id">ID Moto *</label>
-                    <input 
-                      type="number" 
-                      id="motorcycle_id" 
-                      class="form-control" 
-                      formControlName="motorcycle_id"
-                      placeholder="ID de la moto"
-                      min="1">
+                    <label class="form-control-label" for="motorcycle_id">Moto *</label>
+                    <select id="motorcycle_id" class="form-control" 
+                            formControlName="motorcycle_id"
+                            [class.is-invalid]="turnoForm.get('motorcycle_id')?.invalid && turnoForm.get('motorcycle_id')?.touched">
+                      <option value="" disabled selected>Seleccione una moto</option>
+                      <option *ngFor="let motorcycle of motorcycleOptions" 
+                              [value]="motorcycle.value">
+                        {{ motorcycle.label }}
+                      </option>
+                    </select>
                     <div *ngIf="turnoForm.get('motorcycle_id')?.invalid && turnoForm.get('motorcycle_id')?.touched" 
                          class="text-danger small">
-                      El ID de la moto es requerido
+                      <div *ngIf="turnoForm.get('motorcycle_id')?.errors?.['required']">
+                        Por favor seleccione una moto
+                      </div>
                     </div>
+                    <div *ngIf="motorcycleOptions.length === 0" class="text-warning small">
+                      ⚠️ No hay motos disponibles
+                    </div>
+                    <small class="form-text text-muted">
+                      Seleccione la moto asignada al turno
+                    </small>
                   </div>
                 </div>
               </div>
 
-              <!-- Fechas de Inicio y Fin -->
+              <!-- Horas de inicio y fin -->
               <div class="row">
                 <div class="col-lg-6">
                   <div class="form-group">
-                    <label class="form-control-label" for="start_time">Fecha/Hora Inicio *</label>
-                    <input 
-                      type="datetime-local" 
-                      id="start_time" 
-                      class="form-control" 
-                      formControlName="start_time">
+                    <label class="form-control-label" for="start_time">Hora de inicio *</label>
+                    <input type="datetime-local" id="start_time" class="form-control" 
+                           formControlName="start_time"
+                           [class.is-invalid]="turnoForm.get('start_time')?.invalid && turnoForm.get('start_time')?.touched">
                     <div *ngIf="turnoForm.get('start_time')?.invalid && turnoForm.get('start_time')?.touched" 
                          class="text-danger small">
-                      La fecha de inicio es requerida
+                      <div *ngIf="turnoForm.get('start_time')?.errors?.['required']">
+                        La hora de inicio es requerida
+                      </div>
                     </div>
+                    <small class="form-text text-muted">
+                      Fecha y hora de inicio del turno
+                    </small>
                   </div>
                 </div>
-
                 <div class="col-lg-6">
                   <div class="form-group">
-                    <label class="form-control-label" for="end_time">Fecha/Hora Fin (Opcional)</label>
-                    <input 
-                      type="datetime-local" 
-                      id="end_time" 
-                      class="form-control" 
-                      formControlName="end_time">
+                    <label class="form-control-label" for="end_time">Hora de fin (Opcional)</label>
+                    <input type="datetime-local" id="end_time" class="form-control" 
+                           formControlName="end_time">
+                    <small class="form-text text-muted">
+                      Fecha y hora de fin del turno (dejar en blanco si aún está activo)
+                    </small>
                   </div>
                 </div>
               </div>
@@ -93,18 +122,24 @@
                 <div class="col-lg-6">
                   <div class="form-group">
                     <label class="form-control-label" for="status">Estado *</label>
-                    <select 
-                      id="status" 
-                      class="form-control" 
-                      formControlName="status">
-                      <option value="active">Activo</option>
-                      <option value="completed">Completado</option>
-                      <option value="cancelled">Cancelado</option>
+                    <select id="status" class="form-control" 
+                            formControlName="status"
+                            [class.is-invalid]="turnoForm.get('status')?.invalid && turnoForm.get('status')?.touched">
+                      <option value="" disabled selected>Seleccionar estado</option>
+                      <option *ngFor="let status of statusOptions" 
+                              [value]="status.value">
+                        {{ status.label }}
+                      </option>
                     </select>
                     <div *ngIf="turnoForm.get('status')?.invalid && turnoForm.get('status')?.touched" 
                          class="text-danger small">
-                      El estado es requerido
+                      <div *ngIf="turnoForm.get('status')?.errors?.['required']">
+                        El estado es requerido
+                      </div>
                     </div>
+                    <small class="form-text text-muted">
+                      Estado actual del turno
+                    </small>
                   </div>
                 </div>
               </div>
@@ -113,18 +148,13 @@
             
             <!-- Botones -->
             <div class="text-center mt-4">
-              <button 
-                type="button" 
-                class="btn btn-warning mr-2" 
-                (click)="goBack()">
+              <button type="button" class="btn btn-warning mr-2" (click)="goBack()">
                 <i class="fas fa-times mr-1"></i> Cancelar
               </button>
-              <button 
-                type="submit" 
-                class="btn btn-primary" 
-                [disabled]="turnoForm.invalid || loading">
+              <button type="submit" class="btn btn-primary" 
+                      [disabled]="turnoForm.invalid || loading || loadingData">
                 <span *ngIf="loading" class="spinner-border spinner-border-sm mr-2"></span>
-                <i class="fas fa-save mr-1"></i>
+                <i class="fas" [class.fa-save]="!loading" [class.fa-spinner]="loading"></i>
                 {{ isEdit ? 'Actualizar' : 'Crear' }} Turno
               </button>
             </div>
