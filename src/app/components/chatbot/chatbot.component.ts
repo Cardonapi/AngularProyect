@@ -16,10 +16,18 @@ export class ChatbotComponent implements OnInit, OnDestroy, AfterViewChecked {
     messages: ChatMessage[] = [];
     isTyping = false;
     
+    // Propiedades para voz y avatar
+    voiceEnabled = true;
+    isSpeaking = false;
+    private speechSynthesis: SpeechSynthesis;
+    private currentUtterance?: SpeechSynthesisUtterance;
+    
     private chatSubscription?: Subscription;
     private shouldScrollToBottom = false;
 
-    constructor(private chatbotService: GeminiChatbotService) {}
+    constructor(private chatbotService: GeminiChatbotService) {
+        this.speechSynthesis = window.speechSynthesis;
+    }
 
     ngOnInit(): void {
         // Suscribirse al historial de mensajes
@@ -42,6 +50,8 @@ export class ChatbotComponent implements OnInit, OnDestroy, AfterViewChecked {
         if (this.chatSubscription) {
         this.chatSubscription.unsubscribe();
         }
+        // Detener voz al destruir componente
+        this.stopSpeaking();
     }
 
     /**
@@ -87,7 +97,12 @@ export class ChatbotComponent implements OnInit, OnDestroy, AfterViewChecked {
 
         try {
         // Enviar mensaje al servicio
-        await this.chatbotService.sendMessage(message);
+        const response = await this.chatbotService.sendMessage(message);
+        
+        // Leer respuesta en voz alta si está habilitado
+        if (this.voiceEnabled && response) {
+            this.speak(response);
+        }
         } catch (error) {
         console.error('Error al enviar mensaje:', error);
         } finally {
@@ -132,5 +147,70 @@ export class ChatbotComponent implements OnInit, OnDestroy, AfterViewChecked {
     askPredefinedQuestion(question: string): void {
         this.userMessage = question;
         this.sendMessage();
+    }
+
+    /**
+     * Activa/desactiva la voz del asistente
+     */
+    toggleVoice(): void {
+        this.voiceEnabled = !this.voiceEnabled;
+        if (!this.voiceEnabled) {
+        this.stopSpeaking();
+        }
+    }
+
+    /**
+     * Lee un texto en voz alta
+     */
+    private speak(text: string): void {
+        // Detener cualquier voz en curso
+        this.stopSpeaking();
+
+        // Limpiar emojis y caracteres especiales para mejor síntesis
+        const cleanText = text.replace(/[🔑⚠️🌐✅❌📤👋]/g, '').trim();
+        
+        if (!cleanText) return;
+
+        this.currentUtterance = new SpeechSynthesisUtterance(cleanText);
+        
+        // Configurar voz en español
+        const voices = this.speechSynthesis.getVoices();
+        const spanishVoice = voices.find(voice => voice.lang.startsWith('es'));
+        if (spanishVoice) {
+        this.currentUtterance.voice = spanishVoice;
+        }
+        
+        // Configurar parámetros de voz
+        this.currentUtterance.lang = 'es-ES';
+        this.currentUtterance.rate = 1.1; // Velocidad
+        this.currentUtterance.pitch = 1.0; // Tono
+        this.currentUtterance.volume = 1.0; // Volumen
+
+        // Eventos de la voz
+        this.currentUtterance.onstart = () => {
+        this.isSpeaking = true;
+        };
+
+        this.currentUtterance.onend = () => {
+        this.isSpeaking = false;
+        };
+
+        this.currentUtterance.onerror = () => {
+        this.isSpeaking = false;
+        console.error('Error en síntesis de voz');
+        };
+
+        // Reproducir voz
+        this.speechSynthesis.speak(this.currentUtterance);
+    }
+
+    /**
+     * Detiene la voz actual
+     */
+    private stopSpeaking(): void {
+        if (this.speechSynthesis.speaking) {
+        this.speechSynthesis.cancel();
+        }
+        this.isSpeaking = false;
     }
 }

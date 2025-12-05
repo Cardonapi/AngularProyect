@@ -9,17 +9,108 @@
 <!-- Header -->
     <div class="chatbot-header">
         <div class="chatbot-header-content">
-        <div class="chatbot-avatar">
-            <i class="fas fa-robot"></i>
+        <div class="chatbot-avatar" [class.speaking]="isSpeaking" [class.listening]="isTyping">
+            <!-- Avatar animado con SVG -->
+            <svg class="avatar-face" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <!-- Cara del robot con brillo -->
+            <defs>
+                <radialGradient id="faceGradient" cx="50%" cy="30%">
+                <stop offset="0%" style="stop-color:#6c8aed;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#5e72e4;stop-opacity:1" />
+                </radialGradient>
+                <filter id="glow">
+                <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                <feMerge>
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+                </filter>
+            </defs>
+            
+            <!-- Cara principal --><circle cx="50" cy="50" r="45" fill="url(#faceGradient)" />
+            
+            <!-- Detalles robóticos -->
+            <path d="M 20 25 L 30 25 L 30 30 L 20 30 Z" fill="rgba(255,255,255,0.3)" />
+            <path d="M 70 25 L 80 25 L 80 30 L 70 30 Z" fill="rgba(255,255,255,0.3)" />
+            
+            <!-- Ojos más expresivos con brillo -->
+            <g class="eyes">
+                <!-- Ojo izquierdo -->
+                <ellipse class="eye left-eye" cx="35" cy="42" rx="9" ry="11" fill="#fff" />
+                <ellipse class="pupil left-pupil" cx="35" cy="42" rx="5" ry="6" fill="#2d3748" />
+                <circle class="shine left-shine" cx="37" cy="40" r="2" fill="#fff" opacity="0.8" />
+                
+                <!-- Ojo derecho -->
+                <ellipse class="eye right-eye" cx="65" cy="42" rx="9" ry="11" fill="#fff" />
+                <ellipse class="pupil right-pupil" cx="65" cy="42" rx="5" ry="6" fill="#2d3748" />
+                <circle class="shine right-shine" cx="67" cy="40" r="2" fill="#fff" opacity="0.8" />
+            </g>
+            
+            <!-- Cejas expresivas -->
+            <path class="eyebrow left-eyebrow" 
+                    d="M 25 32 Q 30 28 40 30" 
+                    stroke="#fff" 
+                    stroke-width="2.5" 
+                    fill="none" 
+                    stroke-linecap="round" />
+            <path class="eyebrow right-eyebrow" 
+                    d="M 60 30 Q 70 28 75 32" 
+                    stroke="#fff" 
+                    stroke-width="2.5" 
+                    fill="none" 
+                    stroke-linecap="round" />
+            
+            <!-- Boca dinámica con dientes cuando habla -->
+            <g class="mouth-group">
+                <path class="mouth" 
+                        [attr.d]="isSpeaking ? 'M 30 65 Q 50 78 70 65' : (isTyping ? 'M 35 68 Q 50 72 65 68' : 'M 35 70 Q 50 73 65 70')" 
+                        stroke="#fff" 
+                        stroke-width="3" 
+                        fill="none" 
+                        stroke-linecap="round" />
+                <path *ngIf="isSpeaking" 
+                        class="teeth" 
+                        d="M 40 68 L 42 68 M 48 70 L 50 70 M 58 68 L 60 68" 
+                        stroke="#fff" 
+                        stroke-width="2" />
+            </g>
+            
+            <!-- Mejillas sonrojadas cuando habla -->
+            <circle *ngIf="isSpeaking" class="blush left-blush" cx="25" cy="55" r="4" fill="#ff6b9d" opacity="0.4" />
+            <circle *ngIf="isSpeaking" class="blush right-blush" cx="75" cy="55" r="4" fill="#ff6b9d" opacity="0.4" />
+            
+            <!-- Antena animada -->
+            <line class="antenna-line" x1="50" y1="5" x2="50" y2="15" stroke="#fff" stroke-width="2.5" />
+            <circle cx="50" cy="5" r="4" fill="#11cdef" class="antenna-light" filter="url(#glow)" />
+            
+            <!-- Ondas de sonido cuando habla -->
+            <g *ngIf="isSpeaking" class="sound-waves">
+                <path class="wave wave-1" d="M 85 50 Q 90 45 92 50 Q 90 55 85 50" stroke="#11cdef" stroke-width="2" fill="none" opacity="0.6" />
+                <path class="wave wave-2" d="M 15 50 Q 10 45 8 50 Q 10 55 15 50" stroke="#11cdef" stroke-width="2" fill="none" opacity="0.6" />
+            </g>
+            </svg>
         </div>
         <div class="chatbot-info">
             <h5 class="mb-0">Asistente Virtual</h5>
-            <small class="text-success">
+            <small class="text-success" *ngIf="!isSpeaking && !isTyping">
             <i class="fas fa-circle"></i> En línea
+            </small>
+            <small class="text-primary" *ngIf="isSpeaking">
+            <i class="fas fa-volume-up"></i> Hablando...
+            </small>
+            <small class="text-info" *ngIf="isTyping && !isSpeaking">
+            <i class="fas fa-comments"></i> Escribiendo...
             </small>
         </div>
         </div>
         <div class="chatbot-actions">
+        <!-- Botón de voz -->
+        <button class="btn-action" 
+                (click)="toggleVoice()" 
+                [class.active]="voiceEnabled"
+                [title]="voiceEnabled ? 'Desactivar voz' : 'Activar voz'">
+            <i class="fas" [class.fa-volume-up]="voiceEnabled" [class.fa-volume-mute]="!voiceEnabled"></i>
+        </button>
         <button class="btn-action" (click)="minimizeChat()" title="Minimizar">
             <i class="fas" [class.fa-window-minimize]="!isMinimized" [class.fa-window-maximize]="isMinimized"></i>
         </button>
@@ -59,7 +150,14 @@
             [class.bot-message]="message.role === 'bot'">
             
             <div class="message-avatar" *ngIf="message.role === 'bot'">
-            <i class="fas fa-robot"></i>
+            <svg class="avatar-mini" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="45" fill="#5e72e4" />
+                <circle cx="35" cy="40" r="6" fill="#fff" />
+                <circle cx="65" cy="40" r="6" fill="#fff" />
+                <circle cx="35" cy="40" r="3" fill="#2d3748" />
+                <circle cx="65" cy="40" r="3" fill="#2d3748" />
+                <path d="M 35 65 L 65 65" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" />
+            </svg>
             </div>
             
             <div class="message-content">
@@ -79,7 +177,14 @@
         <!-- Indicador de escritura -->
         <div class="message bot-message" *ngIf="isTyping">
             <div class="message-avatar">
-            <i class="fas fa-robot"></i>
+            <svg class="avatar-mini thinking" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="45" fill="#5e72e4" />
+                <circle cx="35" cy="40" r="6" fill="#fff" />
+                <circle cx="65" cy="40" r="6" fill="#fff" />
+                <circle cx="35" cy="40" r="3" fill="#2d3748" />
+                <circle cx="65" cy="40" r="3" fill="#2d3748" />
+                <path d="M 30 65 Q 50 70 70 65" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" />
+            </svg>
             </div>
             <div class="message-content">
             <div class="message-bubble">
