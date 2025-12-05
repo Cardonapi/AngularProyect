@@ -7,6 +7,7 @@ import { OrderService } from '../../../shared/services/order.service';
 import { ClienteService } from '../../../shared/services/cliente.service';
 import { MenuService } from '../../../shared/services/menu.service';
 import { MotorcycleService } from '../../../shared/services/motorcycle.service';
+import { NotificationService } from '../../../shared/services/notification.service';
 import { Order } from '../../../shared/interfaces/order.interface';
 
 interface SelectOption {
@@ -44,6 +45,7 @@ export class PedidoFormComponent implements OnInit {
     private customerService: ClienteService,
     private menuService: MenuService,
     private motorcycleService: MotorcycleService,
+    private notificationService: NotificationService,
     private route: ActivatedRoute,
     private router: Router
   ) {
@@ -275,14 +277,7 @@ export class PedidoFormComponent implements OnInit {
         next: (response) => {
           console.log('✅ Operación exitosa:', response);
           this.loading = false;
-          
-          // Mostrar mensaje de éxito
-          const message = this.isEdit 
-            ? 'Pedido actualizado correctamente' 
-            : 'Pedido creado correctamente';
-          alert(message);
-          
-          // Redirigir a la lista de pedidos
+          alert(`Pedido ${this.isEdit ? 'actualizado' : 'creado'} correctamente`);
           this.router.navigate(['/gestion/pedidos']);
         },
         error: (error) => {
