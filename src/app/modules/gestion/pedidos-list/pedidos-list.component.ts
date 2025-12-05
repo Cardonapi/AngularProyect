@@ -1,9 +1,10 @@
-
 // src/app/modules/gestion/pedidos-list/pedidos-list.component.ts
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { Order } from '../../../shared/interfaces/order.interface';
 import { OrderService } from '../../../shared/services/order.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-pedidos-list',
@@ -15,7 +16,8 @@ export class PedidosListComponent implements OnInit {
 
   constructor(
     private orderService: OrderService,
-    private router: Router
+    private router: Router,
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
@@ -81,5 +83,36 @@ export class PedidosListComponent implements OnInit {
       'cancelled': 'Cancelado'
     };
     return statusMap[status] || status;
+  }
+
+  // 🏍️ Métodos de tracking
+  startTracking(): void {
+    const plate = 'ABC124';
+    const url = `${environment.apiUrl}/motorcycles/track/${plate}`;
+    this.http.post(url, {}).subscribe({
+      next: (res) => {
+        console.log('[TRACK] start ok', res);
+        alert('✅ Rastreo iniciado');
+      },
+      error: (err) => {
+        console.warn('[TRACK] start error', err);
+        alert('⚠️ Error al iniciar rastreo');
+      }
+    });
+  }
+
+  stopTracking(): void {
+    const plate = 'ABC124';
+    const url = `${environment.apiUrl}/motorcycles/stop/${plate}`;
+    this.http.post(url, {}).subscribe({
+      next: (res) => {
+        console.log('[TRACK] stop ok', res);
+        alert('✅ Rastreo detenido');
+      },
+      error: (err) => {
+        console.warn('[TRACK] stop error', err);
+        alert('⚠️ Error al detener rastreo');
+      }
+    });
   }
 }

@@ -20,11 +20,6 @@
           </div>
         </div>
 
-        <!-- Mapa en tiempo real -->
-        <div class="px-4 pb-4">
-          <app-order-map [plate]="'ABC124'"></app-order-map>
-        </div>
-
         <div class="table-responsive" *ngIf="!loading">
           <table class="table align-items-center table-flush">
             <thead class="thead-light">
@@ -74,6 +69,35 @@
         </div>
 
         <!-- Loading y empty states igual que antes -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Mapa interactivo en tiempo real -->
+  <div class="row mt-5">
+    <div class="col-xl-12">
+      <div class="card shadow">
+        <div class="card-header bg-transparent border-0">
+          <div class="row align-items-center">
+            <div class="col">
+              <h3 class="mb-0">Rastreo en Tiempo Real 🏍️</h3>
+            </div>
+            <div class="col text-right">
+              <button class="btn btn-sm btn-info" (click)="startTracking()">
+                <i class="fas fa-play"></i> Iniciar Tracking
+              </button>
+              <button class="btn btn-sm btn-danger ml-2" (click)="stopTracking()">
+                <i class="fas fa-stop"></i> Detener Tracking
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-body p-0">
+          <div class="map-wrapper">
+            <app-order-map [plate]="'ABC124'"></app-order-map>
+          </div>
+        </div>
       </div>
     </div>
   </div>
