@@ -8,10 +8,10 @@ declare interface RouteInfo {
     class: string;
 }
 export const ROUTES: RouteInfo[] = [
-    { path: '/dashboard', title: 'Dashboard',  icon: 'ni-tv-2 text-primary', class: '' },
+    //{ path: '/dashboard', title: 'Dashboard',  icon: 'ni-tv-2 text-primary', class: '' },
     { path: '/maps', title: 'Maps',  icon:'ni-pin-3 text-orange', class: '' },
-    { path: '/user-profile', title: 'User profile',  icon:'ni-single-02 text-yellow', class: '' },
-    { path: '/tables', title: 'Tables',  icon:'ni-bullet-list-67 text-red', class: '' },
+    //{ path: '/user-profile', title: 'User profile',  icon:'ni-single-02 text-yellow', class: '' },
+    //{ path: '/tables', title: 'Tables',  icon:'ni-bullet-list-67 text-red', class: '' },
     {path: '/gestion/restaurantes',title: 'Restaurantes',icon: 'ni-shop text-green',class: ''},
     {path: '/gestion/productos', title: 'Productos', icon: 'ni-box-2 text-orange', class: ''},
     { path: '/gestion/clientes', title: 'Clientes', icon: 'ni-single-02 text-warning', class: '' },
@@ -23,8 +23,8 @@ export const ROUTES: RouteInfo[] = [
     { path: '/gestion/incidentes', title: 'Incidentes', icon: 'ni ni-notification-70 text-danger', class: '' },
     { path: '/gestion/direcciones', title: 'Direcciones', icon: 'ni ni-pin-3 text-red', class: '' },
     { path: '/gestion/fotos', title: 'Fotos', icon: 'ni ni-image text-pink', class: '' },
-    { path: '/login', title: 'Login',  icon:'ni-key-25 text-info', class: '' },
-    { path: '/register', title: 'Register',  icon:'ni-circle-08 text-pink', class: '' },
+    //{ path: '/login', title: 'Login',  icon:'ni-key-25 text-info', class: '' },
+    //{ path: '/register', title: 'Register',  icon:'ni-circle-08 text-pink', class: '' },
     { path: '/graficas', title: 'Gráficas', icon: 'ni-chart-bar-32 text-primary', class: '' },
 
 ];

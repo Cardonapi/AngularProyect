@@ -18,7 +18,15 @@
           </div>
         </div>
         <div class="card-body">
-          <form [formGroup]="direccionForm" (ngSubmit)="onSubmit()">
+          <!-- Spinner mientras cargan los datos -->
+          <div *ngIf="loadingData" class="text-center py-4">
+            <div class="spinner-border text-primary" role="status">
+              <span class="sr-only">Cargando...</span>
+            </div>
+            <p class="mt-2">Cargando datos...</p>
+          </div>
+
+          <form *ngIf="!loadingData" [formGroup]="direccionForm" (ngSubmit)="onSubmit()">
             <h6 class="heading-small text-muted mb-4">Información de la Dirección</h6>
             <div class="pl-lg-4">
               
@@ -32,11 +40,20 @@
                       id="street" 
                       class="form-control" 
                       formControlName="street"
-                      placeholder="Calle, carrera, avenida, etc.">
+                      placeholder="Calle, carrera, avenida, etc."
+                      [class.is-invalid]="direccionForm.get('street')?.invalid && direccionForm.get('street')?.touched">
                     <div *ngIf="direccionForm.get('street')?.invalid && direccionForm.get('street')?.touched" 
                          class="text-danger small">
-                      La calle es requerida (mínimo 5 caracteres)
+                      <div *ngIf="direccionForm.get('street')?.errors?.['required']">
+                        La calle es requerida
+                      </div>
+                      <div *ngIf="direccionForm.get('street')?.errors?.['minlength']">
+                        Mínimo 5 caracteres
+                      </div>
                     </div>
+                    <small class="form-text text-muted">
+                      Dirección completa de la vía principal
+                    </small>
                   </div>
                 </div>
               </div>
@@ -52,6 +69,9 @@
                       class="form-control" 
                       formControlName="additional_info"
                       placeholder="Apartamento, edificio, piso, referencia, etc.">
+                    <small class="form-text text-muted">
+                      Información adicional para ubicación precisa
+                    </small>
                   </div>
                 </div>
               </div>
@@ -66,11 +86,17 @@
                       id="city" 
                       class="form-control" 
                       formControlName="city"
-                      placeholder="Nombre de la ciudad">
+                      placeholder="Nombre de la ciudad"
+                      [class.is-invalid]="direccionForm.get('city')?.invalid && direccionForm.get('city')?.touched">
                     <div *ngIf="direccionForm.get('city')?.invalid && direccionForm.get('city')?.touched" 
                          class="text-danger small">
-                      La ciudad es requerida
+                      <div *ngIf="direccionForm.get('city')?.errors?.['required']">
+                        La ciudad es requerida
+                      </div>
                     </div>
+                    <small class="form-text text-muted">
+                      Ciudad donde se encuentra la dirección
+                    </small>
                   </div>
                 </div>
 
@@ -80,25 +106,27 @@
                     <select 
                       id="state" 
                       class="form-control" 
-                      formControlName="state">
-                      <option value="">Seleccionar estado</option>
-                      <option value="Antioquia">Antioquia</option>
-                      <option value="Bogotá D.C.">Bogotá D.C.</option>
-                      <option value="Valle del Cauca">Valle del Cauca</option>
-                      <option value="Cundinamarca">Cundinamarca</option>
-                      <option value="Santander">Santander</option>
-                      <option value="Atlántico">Atlántico</option>
-                      <option value="Bolívar">Bolívar</option>
+                      formControlName="state"
+                      [class.is-invalid]="direccionForm.get('state')?.invalid && direccionForm.get('state')?.touched">
+                      <option value="" disabled selected>Seleccionar estado</option>
+                      <option *ngFor="let state of stateOptions" [value]="state">
+                        {{ state }}
+                      </option>
                     </select>
                     <div *ngIf="direccionForm.get('state')?.invalid && direccionForm.get('state')?.touched" 
                          class="text-danger small">
-                      El estado es requerido
+                      <div *ngIf="direccionForm.get('state')?.errors?.['required']">
+                        El estado es requerido
+                      </div>
                     </div>
+                    <small class="form-text text-muted">
+                      Departamento o estado de Colombia
+                    </small>
                   </div>
                 </div>
               </div>
 
-              <!-- Código Postal y Pedido ID -->
+              <!-- Código Postal y Pedido -->
               <div class="row">
                 <div class="col-lg-6">
                   <div class="form-group">
@@ -108,24 +136,48 @@
                       id="postal_code" 
                       class="form-control" 
                       formControlName="postal_code"
-                      placeholder="110111">
+                      placeholder="110111"
+                      [class.is-invalid]="direccionForm.get('postal_code')?.invalid && direccionForm.get('postal_code')?.touched">
                     <div *ngIf="direccionForm.get('postal_code')?.invalid && direccionForm.get('postal_code')?.touched" 
                          class="text-danger small">
-                      Código postal requerido (solo números)
+                      <div *ngIf="direccionForm.get('postal_code')?.errors?.['required']">
+                        El código postal es requerido
+                      </div>
+                      <div *ngIf="direccionForm.get('postal_code')?.errors?.['pattern']">
+                        Debe tener 6 dígitos (ej: 110111)
+                      </div>
                     </div>
+                    <small class="form-text text-muted">
+                      6 dígitos para códigos postales en Colombia
+                    </small>
                   </div>
                 </div>
 
                 <div class="col-lg-6">
                   <div class="form-group">
-                    <label class="form-control-label" for="order_id">ID Pedido (Opcional)</label>
-                    <input 
-                      type="number" 
+                    <label class="form-control-label" for="order_id">Pedido *</label>
+                    <select 
                       id="order_id" 
                       class="form-control" 
                       formControlName="order_id"
-                      placeholder="ID del pedido relacionado"
-                      min="1">
+                      [class.is-invalid]="direccionForm.get('order_id')?.invalid && direccionForm.get('order_id')?.touched">
+                      <option value="" disabled selected>Seleccionar pedido</option>
+                      <option *ngFor="let order of orderOptions" [value]="order.value">
+                        {{ order.label }}
+                      </option>
+                    </select>
+                    <div *ngIf="direccionForm.get('order_id')?.invalid && direccionForm.get('order_id')?.touched" 
+                         class="text-danger small">
+                      <div *ngIf="direccionForm.get('order_id')?.errors?.['required']">
+                        Por favor seleccione un pedido
+                      </div>
+                    </div>
+                    <div *ngIf="orderOptions.length === 0" class="text-warning small">
+                      ⚠️ No hay pedidos disponibles
+                    </div>
+                    <small class="form-text text-muted">
+                      Seleccione el pedido asociado a esta dirección
+                    </small>
                   </div>
                 </div>
               </div>
@@ -143,9 +195,9 @@
               <button 
                 type="submit" 
                 class="btn btn-primary" 
-                [disabled]="direccionForm.invalid || loading">
+                [disabled]="direccionForm.invalid || loading || loadingData">
                 <span *ngIf="loading" class="spinner-border spinner-border-sm mr-2"></span>
-                <i class="fas fa-save mr-1"></i>
+                <i class="fas" [class.fa-save]="!loading" [class.fa-spinner]="loading"></i>
                 {{ isEdit ? 'Actualizar' : 'Crear' }} Dirección
               </button>
             </div>

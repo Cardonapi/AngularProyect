@@ -18,41 +18,105 @@
           </div>
         </div>
         <div class="card-body">
-          <form [formGroup]="incidenteForm" (ngSubmit)="onSubmit()">
+          <!-- Spinner mientras cargan los datos -->
+          <div *ngIf="loadingData" class="text-center py-4">
+            <div class="spinner-border text-primary" role="status">
+              <span class="sr-only">Cargando...</span>
+            </div>
+            <p class="mt-2">Cargando datos...</p>
+          </div>
+
+          <form *ngIf="!loadingData" [formGroup]="incidenteForm" (ngSubmit)="onSubmit()">
             <h6 class="heading-small text-muted mb-4">Información del Incidente</h6>
             <div class="pl-lg-4">
               
-              <!-- Moto ID -->
+              <!-- Moto y Tipo de Incidente -->
               <div class="row">
                 <div class="col-lg-6">
                   <div class="form-group">
-                    <label class="form-control-label" for="motorcycle_id">ID Moto *</label>
-                    <input 
-                      type="number" 
-                      id="motorcycle_id" 
-                      class="form-control" 
-                      formControlName="motorcycle_id"
-                      placeholder="ID de la moto afectada"
-                      min="1">
+                    <label class="form-control-label" for="motorcycle_id">Moto *</label>
+                    <select id="motorcycle_id" class="form-control" 
+                            formControlName="motorcycle_id"
+                            [class.is-invalid]="incidenteForm.get('motorcycle_id')?.invalid && incidenteForm.get('motorcycle_id')?.touched">
+                      <option value="" disabled selected>Seleccione una moto</option>
+                      <option *ngFor="let motorcycle of motorcycleOptions" 
+                              [value]="motorcycle.value">
+                        {{ motorcycle.label }}
+                      </option>
+                    </select>
                     <div *ngIf="incidenteForm.get('motorcycle_id')?.invalid && incidenteForm.get('motorcycle_id')?.touched" 
                          class="text-danger small">
-                      El ID de la moto es requerido
+                      <div *ngIf="incidenteForm.get('motorcycle_id')?.errors?.['required']">
+                        Por favor seleccione una moto
+                      </div>
                     </div>
+                    <div *ngIf="motorcycleOptions.length === 0" class="text-warning small">
+                      ⚠️ No hay motos disponibles
+                    </div>
+                    <small class="form-text text-muted">
+                      Seleccione la moto involucrada en el incidente
+                    </small>
                   </div>
                 </div>
-
                 <div class="col-lg-6">
                   <div class="form-group">
                     <label class="form-control-label" for="issue_type">Tipo de Incidente *</label>
-                    <select 
-                      id="issue_type" 
-                      class="form-control" 
-                      formControlName="issue_type"> <!-- ← Cambiado a issue_type -->
-                      <option value="accident">Accidente</option>
-                      <option value="mechanical">Falla Mecánica</option>
-                      <option value="flat_tire">Pinchazo</option>
-                      <option value="other">Otro</option>
+                    <select id="issue_type" class="form-control" 
+                            formControlName="issue_type"
+                            [class.is-invalid]="incidenteForm.get('issue_type')?.invalid && incidenteForm.get('issue_type')?.touched">
+                      <option *ngFor="let tipo of issueTypeOptions" 
+                              [value]="tipo.value">
+                        {{ tipo.label }}
+                      </option>
                     </select>
+                    <div *ngIf="incidenteForm.get('issue_type')?.invalid && incidenteForm.get('issue_type')?.touched" 
+                         class="text-danger small">
+                      El tipo de incidente es requerido
+                    </div>
+                    <small class="form-text text-muted">
+                      Seleccione el tipo de incidente
+                    </small>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Fecha del Reporte -->
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="date_reported">Fecha del Reporte *</label>
+                    <input type="datetime-local" id="date_reported" class="form-control" 
+                           formControlName="date_reported"
+                           [class.is-invalid]="incidenteForm.get('date_reported')?.invalid && incidenteForm.get('date_reported')?.touched">
+                    <div *ngIf="incidenteForm.get('date_reported')?.invalid && incidenteForm.get('date_reported')?.touched" 
+                         class="text-danger small">
+                      <div *ngIf="incidenteForm.get('date_reported')?.errors?.['required']">
+                        La fecha del reporte es requerida
+                      </div>
+                    </div>
+                    <small class="form-text text-muted">
+                      Fecha y hora en que se reportó el incidente
+                    </small>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="status">Estado *</label>
+                    <select id="status" class="form-control" 
+                            formControlName="status"
+                            [class.is-invalid]="incidenteForm.get('status')?.invalid && incidenteForm.get('status')?.touched">
+                      <option *ngFor="let status of statusOptions" 
+                              [value]="status.value">
+                        {{ status.label }}
+                      </option>
+                    </select>
+                    <div *ngIf="incidenteForm.get('status')?.invalid && incidenteForm.get('status')?.touched" 
+                         class="text-danger small">
+                      El estado es requerido
+                    </div>
+                    <small class="form-text text-muted">
+                      Estado actual del incidente
+                    </small>
                   </div>
                 </div>
               </div>
@@ -62,48 +126,23 @@
                 <div class="col-lg-12">
                   <div class="form-group">
                     <label class="form-control-label" for="description">Descripción *</label>
-                    <textarea 
-                      id="description" 
-                      class="form-control" 
-                      formControlName="description"
-                      placeholder="Describa el incidente en detalle..."
-                      rows="3"></textarea>
+                    <textarea id="description" class="form-control" 
+                              formControlName="description"
+                              rows="4"
+                              placeholder="Describa el incidente en detalle..."
+                              [class.is-invalid]="incidenteForm.get('description')?.invalid && incidenteForm.get('description')?.touched"></textarea>
                     <div *ngIf="incidenteForm.get('description')?.invalid && incidenteForm.get('description')?.touched" 
                          class="text-danger small">
-                      La descripción es requerida (mínimo 10 caracteres)
+                      <div *ngIf="incidenteForm.get('description')?.errors?.['required']">
+                        La descripción es requerida
+                      </div>
+                      <div *ngIf="incidenteForm.get('description')?.errors?.['minlength']">
+                        La descripción debe tener al menos 10 caracteres
+                      </div>
                     </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Fecha Reportado y Estado -->
-              <div class="row">
-                <div class="col-lg-6">
-                  <div class="form-group">
-                    <label class="form-control-label" for="date_reported">Fecha/Hora Reportado *</label>
-                    <input 
-                      type="datetime-local" 
-                      id="date_reported" 
-                      class="form-control" 
-                      formControlName="date_reported"> <!-- ← Cambiado a date_reported -->
-                    <div *ngIf="incidenteForm.get('date_reported')?.invalid && incidenteForm.get('date_reported')?.touched" 
-                         class="text-danger small">
-                      La fecha es requerida
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-lg-6">
-                  <div class="form-group">
-                    <label class="form-control-label" for="status">Estado *</label>
-                    <select 
-                      id="status" 
-                      class="form-control" 
-                      formControlName="status">
-                      <option value="open">Abierto</option>
-                      <option value="in_progress">En Progreso</option>
-                      <option value="resolved">Resuelto</option>
-                    </select>
+                    <small class="form-text text-muted">
+                      Describa el incidente con el mayor detalle posible
+                    </small>
                   </div>
                 </div>
               </div>
@@ -112,18 +151,13 @@
             
             <!-- Botones -->
             <div class="text-center mt-4">
-              <button 
-                type="button" 
-                class="btn btn-warning mr-2" 
-                (click)="goBack()">
+              <button type="button" class="btn btn-warning mr-2" (click)="goBack()">
                 <i class="fas fa-times mr-1"></i> Cancelar
               </button>
-              <button 
-                type="submit" 
-                class="btn btn-primary" 
-                [disabled]="incidenteForm.invalid || loading">
+              <button type="submit" class="btn btn-primary" 
+                      [disabled]="incidenteForm.invalid || loading || loadingData">
                 <span *ngIf="loading" class="spinner-border spinner-border-sm mr-2"></span>
-                <i class="fas fa-save mr-1"></i>
+                <i class="fas" [class.fa-save]="!loading" [class.fa-spinner]="loading"></i>
                 {{ isEdit ? 'Actualizar' : 'Crear' }} Incidente
               </button>
             </div>
