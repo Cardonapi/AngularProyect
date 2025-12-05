@@ -104,14 +104,25 @@
                 </div>
                 <div class="col-lg-6">
                   <div class="form-group">
-                    <label class="form-control-label" for="motorcycle_id">Moto asignada</label>
+                    <label class="form-control-label" for="motorcycle_id">Moto asignada *</label>
                     <select id="motorcycle_id" class="form-control" 
-                            formControlName="motorcycle_id">
+                            formControlName="motorcycle_id"
+                            [class.is-invalid]="pedidoForm.get('motorcycle_id')?.invalid && pedidoForm.get('motorcycle_id')?.touched">
+                      <option value="" disabled selected>Seleccione una moto</option>
                       <option *ngFor="let motorcycle of motorcycleOptions" 
                               [value]="motorcycle.value">
                         {{ motorcycle.label }}
                       </option>
                     </select>
+                    <div *ngIf="pedidoForm.get('motorcycle_id')?.invalid && pedidoForm.get('motorcycle_id')?.touched" 
+                         class="text-danger small">
+                      <div *ngIf="pedidoForm.get('motorcycle_id')?.errors?.['required']">
+                        Por favor seleccione una moto
+                      </div>
+                    </div>
+                    <div *ngIf="motorcycleOptions.length === 0" class="text-warning small">
+                      ⚠️ No hay motos disponibles. Debe crear motocicletas primero.
+                    </div>
                     <small class="form-text text-muted">
                       Seleccione una moto para la entrega
                     </small>
@@ -127,7 +138,7 @@
                     <select id="status" class="form-control" 
                             formControlName="status"
                             [class.is-invalid]="pedidoForm.get('status')?.invalid && pedidoForm.get('status')?.touched">
-                      <option value="" disabled>Seleccionar estado</option>
+                      <option value="" disabled selected>Seleccionar estado</option>
                       <option *ngFor="let status of statusOptions" 
                               [value]="status.value">
                         {{ status.label }}
@@ -142,13 +153,6 @@
                     <small class="form-text text-muted">
                       Estado actual del pedido
                     </small>
-                  </div>
-                </div>
-                <div class="col-lg-6">
-                  <div class="alert alert-info mt-4">
-                    <i class="fas fa-info-circle"></i>
-                    <strong>Nota:</strong> El precio total será calculado automáticamente por el sistema
-                    (Precio del menú × Cantidad)
                   </div>
                 </div>
               </div>
