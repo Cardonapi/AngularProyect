@@ -14,6 +14,12 @@ Instalar las dependencias
 ````
 npm install --force
 ````
+Configurar API Key de Gemini
+````
+1. Obtener API Key en: https://aistudio.google.com/app/apikey
+2. Editar src/environments/environment.ts
+3. Reemplazar 'TU_API_KEY_AQUI' con tu API Key
+````
 Correr el servidor
 ```
 ng serve

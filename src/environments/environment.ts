@@ -10,8 +10,8 @@ export const environment = {
   wsUrl: '' as string,
   
   // API Key de Google Gemini
-  // Obtén tu key en: https://makersuite.google.com/app/apikey
-  geminiApiKey: 'AIzaSyAKOAXabdKox7RVVHDC6i1p5KPDwVjZnBE'
+  // IMPORTANTE: Esta key debe ser reemplazada por tu propia key
+  geminiApiKey: 'AIzaSyAAVNt9qwBdjOQ5jiqJJkHoyrM5P8U3jhA'
 };
 
 /*
