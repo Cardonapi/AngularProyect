@@ -21,8 +21,11 @@
   <app-notification-bell></app-notification-bell>
         <a class="nav-link pr-0" role="button" ngbDropdownToggle>
           <div class="media align-items-center">
-            <span class="avatar avatar-sm rounded-circle">
-              <img alt="User profile" [src]="getUserPhoto()" onerror="this.src='assets/img/theme/team-4-800x800.jpg'">
+            <span class="avatar avatar-sm rounded-circle" [ngClass]="{'bg-gradient-primary': !hasUserPhoto()}">
+              <img *ngIf="hasUserPhoto()" alt="User profile" [src]="getUserPhoto()">
+              <span *ngIf="!hasUserPhoto()" class="text-white font-weight-bold" style="font-size: 0.875rem;">
+                {{ getUserInitials() }}
+              </span>
             </span>
             <div class="media-body ml-2 d-none d-lg-block">
               <span class="mb-0 text-sm  font-weight-bold">{{ getUserName() }}</span>

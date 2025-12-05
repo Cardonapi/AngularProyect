@@ -55,7 +55,11 @@ export class NavbarComponent implements OnInit {
    * Obtiene la foto del usuario o una por defecto
    */
   getUserPhoto(): string {
-    return this.currentUser?.photo || 'assets/img/theme/team-4-800x800.jpg';
+    if (this.currentUser?.photo) {
+      return this.currentUser.photo;
+    }
+    // Si no hay foto, retornar null para usar avatar con iniciales
+    return null;
   }
 
   /**
@@ -63,6 +67,26 @@ export class NavbarComponent implements OnInit {
    */
   getUserName(): string {
     return this.currentUser?.name || 'Usuario';
+  }
+
+  /**
+   * Obtiene las iniciales del nombre del usuario
+   */
+  getUserInitials(): string {
+    if (!this.currentUser?.name) return 'U';
+    
+    const names = this.currentUser.name.trim().split(' ');
+    if (names.length >= 2) {
+      return (names[0][0] + names[names.length - 1][0]).toUpperCase();
+    }
+    return names[0][0].toUpperCase();
+  }
+
+  /**
+   * Verifica si el usuario tiene foto
+   */
+  hasUserPhoto(): boolean {
+    return !!this.currentUser?.photo;
   }
 
 }

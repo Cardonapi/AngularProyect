@@ -1,0 +1,19 @@
+// Avatar con iniciales cuando no hay foto
+.avatar {
+  &.bg-gradient-primary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(87deg, #5e72e4 0, #825ee4 100%);
+    
+    span {
+      line-height: 1;
+    }
+  }
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
