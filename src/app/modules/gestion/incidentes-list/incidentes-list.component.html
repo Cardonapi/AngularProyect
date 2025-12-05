@@ -1,0 +1,134 @@
+<!-- src/app/modules/gestion/incidentes-list/incidentes-list.component.html -->
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row">
+        <div class="col-xl-3 col-lg-6">
+          <div class="card card-stats mb-4 mb-xl-0">
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <h5 class="card-title text-uppercase text-muted mb-0">Total Incidentes</h5>
+                  <span class="h2 font-weight-bold mb-0">{{incidentes.length}}</span>
+                </div>
+                <div class="col-auto">
+                  <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
+                    <i class="fas fa-exclamation-triangle"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-lg-6">
+          <div class="card card-stats mb-4 mb-xl-0">
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <h5 class="card-title text-uppercase text-muted mb-0">Reportados</h5>
+                  <span class="h2 font-weight-bold mb-0">
+                    {{ getIncidentesAbiertos() }}
+                  </span>
+                </div>
+                <div class="col-auto">
+                  <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
+                    <i class="fas fa-flag"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid mt--7">
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header border-0">
+          <div class="row align-items-center">
+            <div class="col">
+              <h3 class="mb-0">Incidentes</h3>
+            </div>
+            <div class="col text-right">
+              <button class="btn btn-sm btn-primary" (click)="createIncidente()">
+                <i class="fas fa-plus"></i> Nuevo Incidente
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="table-responsive" *ngIf="!loading">
+          <table class="table align-items-center table-flush">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Moto ID</th>
+                <th scope="col">Tipo</th>
+                <th scope="col">Descripción</th>
+                <th scope="col">Fecha</th>
+                <th scope="col">Estado</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let incidente of incidentes">
+                <th scope="row">
+                  <span class="mb-0 text-sm">#{{ incidente.id }}</span>
+                </th>
+                <td>{{ incidente.motorcycle_id }}</td>
+                <td>
+                  <span class="badge badge-dot mr-4">
+                    <i [class]="getTypeBadgeClass(incidente.type)"></i>
+                    {{ getTypeText(incidente.type) }}
+                  </span>
+                </td>
+                <td>
+                  <small class="text-muted" style="max-width: 200px; display: inline-block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                    {{ incidente.description }}
+                  </small>
+                </td>
+                <td>
+                <small>{{ formatDate(incidente.date_reported) }}</small>
+                </td>
+                <td>
+                  <span class="badge badge-dot mr-4">
+                    <i [class]="getStatusBadgeClass(incidente.status)"></i>
+                    {{ getStatusText(incidente.status) }}
+                  </span>
+                </td>
+                <td class="text-right">
+                  <div ngbDropdown placement="bottom-right">
+                    <a class="btn btn-sm btn-icon-only text-light" ngbDropdownToggle>
+                      <i class="fas fa-ellipsis-v"></i>
+                    </a>
+                    <div ngbDropdownMenu class="dropdown-menu-right dropdown-menu-arrow">
+                      <a class="dropdown-item" (click)="editIncidente(incidente.id!)">Editar</a>
+                      <a class="dropdown-item text-danger" (click)="deleteIncidente(incidente.id!)">Eliminar</a>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div *ngIf="loading" class="text-center py-4">
+          <div class="spinner-border" role="status">
+            <span class="sr-only">Cargando...</span>
+          </div>
+        </div>
+
+        <div *ngIf="!loading && incidentes.length === 0" class="text-center py-4">
+          <p class="text-muted">No hay incidentes registrados</p>
+          <button class="btn btn-primary" (click)="createIncidente()">
+            Reportar primer incidente
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

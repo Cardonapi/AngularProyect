@@ -19,6 +19,12 @@ import { ConductoresListComponent } from './conductores-list/conductores-list.co
 import { ConductorFormComponent } from './conductores-form/conductor-form.component';   
 import { TurnosListComponent } from './turnos-list/turnos-list.component';
 import { TurnoFormComponent } from './turnos-form/turno-form.component';
+import { IncidenteFormComponent } from './incidente-form/incidente-form.component';
+import { IncidentesListComponent } from './incidentes-list/incidentes-list.component';
+import { DireccionesListComponent } from './direcciones-list/direcciones-list.component';
+import { DireccionFormComponent } from './direcciones-form/direccion-form.component';
+import { FotosListComponent } from './fotos-list/fotos-list.component';
+import { FotoUploadComponent } from './foto-upload/foto-upload.component';
 
 // Definir rutas
 const routes: Routes = [
@@ -64,6 +70,20 @@ const routes: Routes = [
     { path: 'turnos', component: TurnosListComponent },
     { path: 'turnos/crear', component: TurnoFormComponent },
     { path: 'turnos/editar/:id', component: TurnoFormComponent },
+
+//Issues
+    { path: 'incidentes', component: IncidentesListComponent },
+    { path: 'incidentes/crear', component: IncidenteFormComponent },
+    { path: 'incidentes/editar/:id', component: IncidenteFormComponent },
+
+//Direcciones
+    // En gestion-routing.module.ts, agregar:
+    { path: 'direcciones', component: DireccionesListComponent },
+    { path: 'direcciones/crear', component: DireccionFormComponent },
+    { path: 'direcciones/editar/:id', component: DireccionFormComponent },
+
+    { path: 'fotos', component: FotosListComponent },
+    { path: 'fotos/subir', component: FotoUploadComponent },
   // Ruta por defecto
   { path: '', redirectTo: 'restaurantes', pathMatch: 'full' }
 ];

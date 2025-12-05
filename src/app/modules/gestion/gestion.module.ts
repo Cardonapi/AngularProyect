@@ -23,6 +23,13 @@ import { ConductoresListComponent } from './conductores-list/conductores-list.co
 import { ConductorFormComponent } from './conductores-form/conductor-form.component';
 import { TurnosListComponent } from './turnos-list/turnos-list.component';
 import { TurnoFormComponent } from './turnos-form/turno-form.component';
+import { IncidentesListComponent } from './incidentes-list/incidentes-list.component';
+import { IncidenteFormComponent } from './incidente-form/incidente-form.component';
+import { DireccionFormComponent } from './direcciones-form/direccion-form.component';
+import { DireccionesListComponent } from './direcciones-list/direcciones-list.component';
+import { FotosListComponent } from './fotos-list/fotos-list.component';
+import { FotoUploadComponent } from './foto-upload/foto-upload.component';
+
 @NgModule({
   declarations: [
     RestaurantesListComponent,
@@ -40,7 +47,13 @@ import { TurnoFormComponent } from './turnos-form/turno-form.component';
     ConductoresListComponent,
     ConductorFormComponent,
     TurnosListComponent,
-    TurnoFormComponent
+    TurnoFormComponent,
+    DireccionesListComponent,
+    DireccionFormComponent,
+    IncidentesListComponent,
+    IncidenteFormComponent,
+    FotosListComponent,
+    FotoUploadComponent
   ],
   imports: [
     CommonModule,

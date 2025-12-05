@@ -1,0 +1,96 @@
+<!-- src/app/modules/gestion/fotos-list/fotos-list.component.html -->
+<div class="header bg-gradient-pink pb-8 pt-5 pt-md-8">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row">
+        <div class="col-xl-3 col-lg-6">
+          <div class="card card-stats mb-4 mb-xl-0">
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <h5 class="card-title text-uppercase text-muted mb-0">Total Fotos</h5>
+                  <span class="h2 font-weight-bold mb-0">{{fotos.length}}</span>
+                </div>
+                <div class="col-auto">
+                  <div class="icon icon-shape bg-pink text-white rounded-circle shadow">
+                    <i class="fas fa-camera"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid mt--7">
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header border-0">
+          <div class="row align-items-center">
+            <div class="col">
+              <h3 class="mb-0">Fotos</h3>
+            </div>
+            <div class="col text-right">
+              <button class="btn btn-sm btn-primary" (click)="createFoto()">
+                <i class="fas fa-plus"></i> Subir Foto
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card-body" *ngIf="!loading">
+          <div class="row">
+            <div class="col-md-6 col-lg-4 mb-4" *ngFor="let foto of fotos">
+              <div class="card card-lift--hover shadow border-0">
+                <div class="card-body p-0">
+                  <div class="image-container" style="height: 200px; overflow: hidden;">
+                    <img 
+                      [src]="getImageUrl(foto.id!)" 
+                      alt="{{foto.description || 'Foto'}}"
+                      class="img-fluid w-100"
+                      style="object-fit: cover; height: 100%;">
+                  </div>
+                  <div class="p-3">
+                    <h6 class="mb-1">
+                      <i class="fas fa-exclamation-triangle text-warning mr-2"></i>
+                      Incidente #{{foto.issue_id}}
+                    </h6>
+                    <p class="text-sm text-muted mb-2" *ngIf="foto.description">
+                      {{foto.description}}
+                    </p>
+                    <div class="d-flex justify-content-between align-items-center">
+                      <small class="text-muted">
+                        <i class="fas fa-calendar-alt mr-1"></i>
+                        {{formatDate(foto.uploaded_at)}}
+                      </small>
+                      <button class="btn btn-sm btn-danger" (click)="deleteFoto(foto.id!)">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="loading" class="text-center py-4">
+          <div class="spinner-border text-pink" role="status">
+            <span class="sr-only">Cargando...</span>
+          </div>
+        </div>
+
+        <div *ngIf="!loading && fotos.length === 0" class="text-center py-4">
+          <p class="text-muted">No hay fotos registradas</p>
+          <button class="btn btn-primary" (click)="createFoto()">
+            <i class="fas fa-camera mr-2"></i> Subir primera foto
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

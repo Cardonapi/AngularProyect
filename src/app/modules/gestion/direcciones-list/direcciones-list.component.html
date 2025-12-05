@@ -1,0 +1,111 @@
+<!-- src/app/modules/gestion/direcciones-list/direcciones-list.component.html -->
+<div class="header bg-gradient-red pb-8 pt-5 pt-md-8">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row">
+        <div class="col-xl-3 col-lg-6">
+          <div class="card card-stats mb-4 mb-xl-0">
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <h5 class="card-title text-uppercase text-muted mb-0">Total Direcciones</h5>
+                  <span class="h2 font-weight-bold mb-0">{{direcciones.length}}</span>
+                </div>
+                <div class="col-auto">
+                  <div class="icon icon-shape bg-red text-white rounded-circle shadow">
+                    <i class="fas fa-map-marker-alt"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid mt--7">
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header border-0">
+          <div class="row align-items-center">
+            <div class="col">
+              <h3 class="mb-0">Direcciones</h3>
+            </div>
+            <div class="col text-right">
+              <button class="btn btn-sm btn-primary" (click)="createDireccion()">
+                <i class="fas fa-plus"></i> Nueva Dirección
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="table-responsive" *ngIf="!loading">
+          <table class="table align-items-center table-flush">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Dirección</th>
+                <th scope="col">Ciudad</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Código Postal</th>
+                <th scope="col">Pedido ID</th>
+                <th scope="col">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let direccion of direcciones">
+                <td>
+                  <span class="mb-0 text-sm">#{{ direccion.id }}</span>
+                </td>
+                <td>
+                  <div>
+                    <span class="mb-0 text-sm">{{ direccion.street }}</span>
+                    <small *ngIf="direccion.additional_info" class="text-muted d-block">
+                      {{ direccion.additional_info }}
+                    </small>
+                  </div>
+                </td>
+                <td>{{ direccion.city }}</td>
+                <td>{{ direccion.state }}</td>
+                <td>{{ direccion.postal_code }}</td>
+                <td>
+                  <span *ngIf="direccion.order_id" class="badge badge-default">
+                    #{{ direccion.order_id }}
+                  </span>
+                  <span *ngIf="!direccion.order_id" class="text-muted">N/A</span>
+                </td>
+                <td class="text-right">
+                  <div ngbDropdown placement="bottom-right">
+                    <a class="btn btn-sm btn-icon-only text-light" ngbDropdownToggle>
+                      <i class="fas fa-ellipsis-v"></i>
+                    </a>
+                    <div ngbDropdownMenu class="dropdown-menu-right dropdown-menu-arrow">
+                      <a class="dropdown-item" (click)="editDireccion(direccion.id!)">Editar</a>
+                      <a class="dropdown-item text-danger" (click)="deleteDireccion(direccion.id!)">Eliminar</a>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div *ngIf="loading" class="text-center py-4">
+          <div class="spinner-border" role="status">
+            <span class="sr-only">Cargando...</span>
+          </div>
+        </div>
+
+        <div *ngIf="!loading && direcciones.length === 0" class="text-center py-4">
+          <p class="text-muted">No hay direcciones registradas</p>
+          <button class="btn btn-primary" (click)="createDireccion()">
+            Registrar primera dirección
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
