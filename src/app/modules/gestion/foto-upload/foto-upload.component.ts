@@ -46,7 +46,7 @@ export class FotoUploadComponent {
       const formData = new FormData();
       formData.append('issue_id', this.uploadForm.get('issue_id')?.value);
       formData.append('description', this.uploadForm.get('description')?.value || '');
-      formData.append('image', this.selectedFile);
+      formData.append('file', this.selectedFile);  // Cambiar 'image' a 'file'
 
       this.photoService.create(formData).subscribe({
         next: (response) => {

@@ -28,9 +28,9 @@ export class PhotoService {
     return this.http.get<Photo>(`${this.apiUrl}/${id}/info`);
   }
 
-  // POST /photos - Subir nueva foto
+  // POST /photos/upload - Subir nueva foto
   create(photoData: FormData): Observable<Photo> {
-    return this.http.post<Photo>(this.apiUrl, photoData);
+    return this.http.post<Photo>(`${this.apiUrl}/upload`, photoData);
   }
 
   // DELETE /photos/{id}
