@@ -32,16 +32,26 @@
                       id="license_plate" 
                       class="form-control" 
                       formControlName="license_plate"
-                      placeholder="ABC123">
+                      placeholder="Ej: ABC123 o XYZ-456"
+                      [class.is-invalid]="motoForm.get('license_plate')?.invalid && motoForm.get('license_plate')?.touched">
                     <div *ngIf="motoForm.get('license_plate')?.invalid && motoForm.get('license_plate')?.touched" 
                          class="text-danger small">
                       <div *ngIf="motoForm.get('license_plate')?.errors?.['required']">
                         La placa es requerida
                       </div>
                       <div *ngIf="motoForm.get('license_plate')?.errors?.['minlength']">
-                        Mínimo 6 caracteres
+                        Mínimo 5 caracteres
+                      </div>
+                      <div *ngIf="motoForm.get('license_plate')?.errors?.['maxlength']">
+                        Máximo 10 caracteres
+                      </div>
+                      <div *ngIf="motoForm.get('license_plate')?.errors?.['pattern']">
+                        Solo letras, números, guiones y espacios
                       </div>
                     </div>
+                    <small class="form-text text-muted">
+                      Ejemplo: ABC-123 o XYZ456
+                    </small>
                   </div>
                 </div>
 
@@ -51,8 +61,9 @@
                     <select 
                       id="brand" 
                       class="form-control" 
-                      formControlName="brand">
-                      <option value="">Seleccionar marca</option>
+                      formControlName="brand"
+                      [class.is-invalid]="motoForm.get('brand')?.invalid && motoForm.get('brand')?.touched">
+                      <option value="" disabled selected>Seleccionar marca</option>
                       <option *ngFor="let marca of marcas" [value]="marca">
                         {{ marca }}
                       </option>
@@ -61,33 +72,15 @@
                          class="text-danger small">
                       La marca es requerida
                     </div>
+                    <small class="form-text text-muted">
+                      Seleccione la marca de la motocicleta
+                    </small>
                   </div>
                 </div>
               </div>
 
-              <!-- Modelo y Año -->
+              <!-- Año y Estado -->
               <div class="row">
-                <div class="col-lg-6">
-                  <div class="form-group">
-                    <label class="form-control-label" for="model">Modelo *</label>
-                    <input 
-                      type="text" 
-                      id="model" 
-                      class="form-control" 
-                      formControlName="model"
-                      placeholder="Modelo de la moto">
-                    <div *ngIf="motoForm.get('model')?.invalid && motoForm.get('model')?.touched" 
-                         class="text-danger small">
-                      <div *ngIf="motoForm.get('model')?.errors?.['required']">
-                        El modelo es requerido
-                      </div>
-                      <div *ngIf="motoForm.get('model')?.errors?.['minlength']">
-                        Mínimo 2 caracteres
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
                 <div class="col-lg-6">
                   <div class="form-group">
                     <label class="form-control-label" for="year">Año *</label>
@@ -98,38 +91,20 @@
                       formControlName="year"
                       placeholder="2024"
                       [min]="2000"
-                      [max]="currentYear">
+                      [max]="currentYear"
+                      [class.is-invalid]="motoForm.get('year')?.invalid && motoForm.get('year')?.touched">
                     <div *ngIf="motoForm.get('year')?.invalid && motoForm.get('year')?.touched" 
                          class="text-danger small">
                       <div *ngIf="motoForm.get('year')?.errors?.['required']">
                         El año es requerido
                       </div>
                       <div *ngIf="motoForm.get('year')?.errors?.['min'] || motoForm.get('year')?.errors?.['max']">
-                        El año debe estar entre 2000 y {{ currentYear }} <!-- ← Usa la propiedad -->
+                        El año debe estar entre 2000 y {{ currentYear }}
                       </div>
                     </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Color y Estado -->
-              <div class="row">
-                <div class="col-lg-6">
-                  <div class="form-group">
-                    <label class="form-control-label" for="color">Color *</label>
-                    <select 
-                      id="color" 
-                      class="form-control" 
-                      formControlName="color">
-                      <option value="">Seleccionar color</option>
-                      <option *ngFor="let color of colores" [value]="color">
-                        {{ color }}
-                      </option>
-                    </select>
-                    <div *ngIf="motoForm.get('color')?.invalid && motoForm.get('color')?.touched" 
-                         class="text-danger small">
-                      El color es requerido
-                    </div>
+                    <small class="form-text text-muted">
+                      Año de fabricación
+                    </small>
                   </div>
                 </div>
 
@@ -139,7 +114,8 @@
                     <select 
                       id="status" 
                       class="form-control" 
-                      formControlName="status">
+                      formControlName="status"
+                      [class.is-invalid]="motoForm.get('status')?.invalid && motoForm.get('status')?.touched">
                       <option *ngFor="let estado of estados" [value]="estado.value">
                         {{ estado.label }}
                       </option>
@@ -148,10 +124,12 @@
                          class="text-danger small">
                       El estado es requerido
                     </div>
+                    <small class="form-text text-muted">
+                      Estado actual de la motocicleta
+                    </small>
                   </div>
                 </div>
               </div>
-
             </div>
             
             <!-- Botones -->

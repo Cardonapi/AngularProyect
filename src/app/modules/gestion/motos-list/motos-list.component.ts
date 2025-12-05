@@ -6,11 +6,11 @@ import { MotorcycleService } from '../../../shared/services/motorcycle.service';
 
 @Component({
   selector: 'app-motos-list',
-  templateUrl: './motos-list.component.html'
+  templateUrl: './motos-list.component.html',
 })
 export class MotosListComponent implements OnInit {
   motos: Motorcycle[] = [];
-  loading = true;
+  loading = false;
 
   constructor(
     private motorcycleService: MotorcycleService,
@@ -24,41 +24,54 @@ export class MotosListComponent implements OnInit {
   loadMotos(): void {
     this.loading = true;
     this.motorcycleService.getAll().subscribe({
-      next: (data) => {
+      next: (data: Motorcycle[]) => {
+        console.log('✅ Motos cargadas:', data);
         this.motos = data;
         this.loading = false;
-        console.log('Motos cargadas:', data);
       },
       error: (error) => {
-        console.error('Error:', error);
+        console.error('❌ Error al cargar motos:', error);
         this.loading = false;
-        alert('Error al cargar las motos');
+        alert('Error al cargar la lista de motos');
       }
     });
-  }
-
-  editMoto(id: number): void {
-    this.router.navigate(['/gestion/motos/editar', id]);
   }
 
   createMoto(): void {
     this.router.navigate(['/gestion/motos/nuevo']);
   }
 
+  editMoto(id: number): void {
+    this.router.navigate(['/gestion/motos/editar', id]);
+  }
+
   deleteMoto(id: number): void {
-    const moto = this.motos.find(m => m.id === id);
-    
-    if (confirm(`¿Estás seguro de eliminar la moto "${moto?.license_plate}"?`)) {
+    if (confirm('¿Estás seguro de que deseas eliminar esta moto?')) {
+      this.loading = true;
       this.motorcycleService.delete(id).subscribe({
         next: () => {
-          alert('✅ Moto eliminada correctamente');
-          this.motos = this.motos.filter(m => m.id !== id);
+          console.log('✅ Moto eliminada ID:', id);
+          this.loadMotos(); // Recargar la lista
+          alert('Moto eliminada correctamente');
         },
         error: (error) => {
-          console.error('Error:', error);
-          alert('❌ Error al eliminar la moto');
+          console.error('❌ Error al eliminar moto:', error);
+          this.loading = false;
+          alert('Error al eliminar la moto');
         }
       });
     }
+  }
+
+  // Método para contar motos por estado (opcional, para estadísticas)
+  getMotosByStatus(status: string): number {
+    return this.motos.filter(moto => moto.status === status).length;
+  }
+
+  // Método para formatear la placa (opcional)
+  formatLicensePlate(plate: string): string {
+    if (!plate) return '';
+    // Convertir a mayúsculas y agregar espacios si es necesario
+    return plate.toUpperCase().replace(/([A-Z]{3})(\d{3})/, '$1 $2');
   }
 }

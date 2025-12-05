@@ -48,9 +48,7 @@
               <tr>
                 <th scope="col">Placa</th>
                 <th scope="col">Marca</th>
-                <th scope="col">Modelo</th>
                 <th scope="col">Año</th>
-                <th scope="col">Color</th>
                 <th scope="col">Estado</th>
                 <th scope="col"></th>
               </tr>
@@ -64,22 +62,23 @@
                       <i class="fas fa-motorcycle"></i>
                     </a>
                     <div class="media-body">
-                      <span class="mb-0 text-sm font-weight-bold">{{ moto.license_plate }}</span>
+                      <span class="mb-0 text-sm font-weight-bold">{{ moto.license_plate || 'Sin placa' }}</span>
                     </div>
                   </div>
                 </th>
-                <td>{{ moto.brand }}</td>
-                <td>{{ moto.model }}</td>
-                <td>{{ moto.year }}</td>
-                <td>{{ moto.color }}</td>
+                <td>{{ moto.brand || 'Sin marca' }}</td>
+                <td>{{ moto.year || 'N/A' }}</td>
                 <td>
                   <span class="badge badge-dot mr-4">
-                    <i class="bg-success" *ngIf="moto.status === 'active'"></i>
+                    <i class="bg-success" *ngIf="moto.status === 'available'"></i>
+                    <i class="bg-primary" *ngIf="moto.status === 'in_use'"></i>
                     <i class="bg-warning" *ngIf="moto.status === 'maintenance'"></i>
-                    <i class="bg-danger" *ngIf="moto.status === 'inactive'"></i>
-                    <span *ngIf="moto.status === 'active'">Activa</span>
+                    <i class="bg-danger" *ngIf="moto.status === 'unavailable'"></i>
+                    <span *ngIf="moto.status === 'available'">Disponible</span>
+                    <span *ngIf="moto.status === 'in_use'">En uso</span>
                     <span *ngIf="moto.status === 'maintenance'">Mantenimiento</span>
-                    <span *ngIf="moto.status === 'inactive'">Inactiva</span>
+                    <span *ngIf="moto.status === 'unavailable'">No disponible</span>
+                    <span *ngIf="!moto.status">Sin estado</span>
                   </span>
                 </td>
                 <td class="text-right">
@@ -88,8 +87,12 @@
                       <i class="fas fa-ellipsis-v"></i>
                     </a>
                     <div ngbDropdownMenu class="dropdown-menu-right dropdown-menu-arrow">
-                      <a class="dropdown-item" (click)="editMoto(moto.id!)">Editar</a>
-                      <a class="dropdown-item text-danger" (click)="deleteMoto(moto.id!)">Eliminar</a>
+                      <a class="dropdown-item" (click)="editMoto(moto.id!)">
+                        <i class="fas fa-edit mr-2"></i>Editar
+                      </a>
+                      <a class="dropdown-item text-danger" (click)="deleteMoto(moto.id!)">
+                        <i class="fas fa-trash mr-2"></i>Eliminar
+                      </a>
                     </div>
                   </div>
                 </td>
@@ -99,17 +102,23 @@
         </div>
 
         <div *ngIf="loading" class="text-center py-4">
-          <div class="spinner-border" role="status">
+          <div class="spinner-border text-primary" role="status">
             <span class="sr-only">Cargando...</span>
           </div>
+          <p class="mt-2">Cargando motos...</p>
         </div>
 
         <div *ngIf="!loading && motos.length === 0" class="text-center py-4">
-          <p class="text-muted">No hay motos registradas</p>
-          <button class="btn btn-primary" (click)="createMoto()">
-            Registrar primera moto
-          </button>
+          <div class="alert alert-info mx-auto" style="max-width: 400px;">
+            <i class="fas fa-info-circle fa-2x mb-3"></i>
+            <h4 class="alert-heading">No hay motos registradas</h4>
+            <p>Comienza registrando tu primera motocicleta</p>
+            <button class="btn btn-primary" (click)="createMoto()">
+              <i class="fas fa-plus mr-2"></i>Registrar primera moto
+            </button>
+          </div>
         </div>
+
       </div>
     </div>
   </div>
