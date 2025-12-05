@@ -1,10 +1,54 @@
 // src/app/modules/gestion/productos-list/productos-list.component.ts
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Producto } from '../../../shared/interfaces/producto.interface';
 import { ProductoService } from '../../../shared/services/producto.service';
 
+// Componente del modal
+@Component({
+  selector: 'app-confirm-delete-modal',
+  template: `
+    <div class="modal-header">
+      <h5 class="modal-title text-danger">
+        <i class="fas fa-exclamation-triangle mr-2"></i>
+        Confirmar Eliminación
+      </h5>
+      <button type="button" class="close" (click)="close()">
+        <span>&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p class="mb-2">{{message}}</p>
+      <small class="text-muted">Esta acción no se puede deshacer.</small>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="close()">
+        <i class="fas fa-times mr-1"></i> Cancelar
+      </button>
+      <button type="button" class="btn btn-danger" (click)="confirm()">
+        <i class="fas fa-trash mr-1"></i> Eliminar
+      </button>
+    </div>
+  `
+})
+export class ConfirmDeleteModalComponent {
+  message: string = '¿Estás seguro?';
+  
+  constructor(
+    private activeModal: NgbActiveModal
+  ) {}
+
+  close() {
+    this.activeModal.dismiss('cancel');
+  }
+
+  confirm() {
+    this.activeModal.close('confirm');
+  }
+}
+
+// Componente principal del list
 @Component({
   selector: 'app-productos-list',
   templateUrl: './productos-list.component.html'
@@ -29,50 +73,40 @@ export class ProductosListComponent implements OnInit {
       next: (data) => {
         this.productos = data;
         this.loading = false;
-        console.log('Productos cargados:', data);
       },
       error: (error) => {
         console.error('Error:', error);
         this.loading = false;
-        this.showBasicAlert('Error al cargar los productos', 'error');
+        this.showAlert('Error al cargar los productos', 'error');
       }
     });
   }
 
-  // ✅ ALERTAS BÁSICAS MEJORADAS
-  showBasicAlert(message: string, type: 'success' | 'error' = 'success') {
-    // Buscar si ya existe una alerta
+  // ✅ ALERTAS MEJORADAS
+  showAlert(message: string, type: 'success' | 'error' | 'warning' = 'success') {
     const existingAlert = document.querySelector('.custom-alert');
-    if (existingAlert) {
-      existingAlert.remove();
-    }
+    if (existingAlert) existingAlert.remove();
 
-    const alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
-    const icon = type === 'success' ? '✅' : '❌';
+    const alertClass = type === 'success' ? 'alert-success' : 
+                      type === 'error' ? 'alert-danger' : 'alert-warning';
+    const icon = type === 'success' ? '✅' : 
+                type === 'error' ? '❌' : '⚠️';
     
     const alertDiv = document.createElement('div');
     alertDiv.className = `alert ${alertClass} alert-dismissible fade show custom-alert position-fixed`;
     alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
     alertDiv.innerHTML = `
-      <strong>${icon} ${type === 'success' ? 'Éxito' : 'Error'}</strong> ${message}
-      <button type="button" class="close" data-dismiss="alert">
+      <strong>${icon} ${type === 'success' ? 'Éxito' : type === 'error' ? 'Error' : 'Advertencia'}</strong> ${message}
+      <button type="button" class="close" onclick="this.parentElement.remove()">
         <span>&times;</span>
       </button>
     `;
     
     document.body.appendChild(alertDiv);
     
-    // Auto-remove after 4 seconds
     setTimeout(() => {
-      if (alertDiv.parentNode) {
-        alertDiv.parentNode.removeChild(alertDiv);
-      }
+      if (alertDiv.parentNode) alertDiv.parentNode.removeChild(alertDiv);
     }, 4000);
-
-    // Add dismiss functionality
-    alertDiv.querySelector('.close')?.addEventListener('click', () => {
-      alertDiv.remove();
-    });
   }
 
   editProducto(id: number): void {
@@ -83,61 +117,68 @@ export class ProductosListComponent implements OnInit {
     this.router.navigate(['/gestion/productos/nuevo']);
   }
 
-  // ✅ ELIMINAR CON MODAL
+  // ✅ ELIMINAR CON MODAL SIMPLIFICADO
   deleteProducto(id: number): void {
     const producto = this.productos.find(p => p.id === id);
+    const message = `¿Eliminar el producto "${producto?.name || 'este producto'}"?`;
     
-    const modalRef = this.modalService.open(NgbdModalConfirm);
-    modalRef.componentInstance.message = `¿Eliminar el producto "${producto?.name}"?`;
+    // Crear modal manualmente (sin NgbModal si da problemas)
+    const modalHtml = `
+      <div class="modal fade show" style="display: block; background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title text-danger">
+                <i class="fas fa-exclamation-triangle mr-2"></i>
+                Confirmar Eliminación
+              </h5>
+              <button type="button" class="close" onclick="this.closest('.modal').remove()">
+                <span>&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p class="mb-2">${message}</p>
+              <small class="text-muted">Esta acción no se puede deshacer.</small>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" onclick="this.closest('.modal').remove()">
+                <i class="fas fa-times mr-1"></i> Cancelar
+              </button>
+              <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+                <i class="fas fa-trash mr-1"></i> Eliminar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
     
-    modalRef.result.then((result) => {
-      if (result === 'confirm') {
-        this.productoService.delete(id).subscribe({
-          next: () => {
-            this.showBasicAlert('Producto eliminado correctamente', 'success');
-            this.productos = this.productos.filter(p => p.id !== id);
-          },
-          error: (error) => {
-            console.error('Error:', error);
-            this.showBasicAlert('Error al eliminar el producto', 'error');
-          }
+    const modalDiv = document.createElement('div');
+    modalDiv.innerHTML = modalHtml;
+    modalDiv.className = 'modal-container';
+    document.body.appendChild(modalDiv);
+    
+    // Agregar evento al botón de confirmación
+    setTimeout(() => {
+      const confirmBtn = document.getElementById('confirmDeleteBtn');
+      if (confirmBtn) {
+        confirmBtn.addEventListener('click', () => {
+          // Remover modal
+          modalDiv.remove();
+          
+          // Eliminar producto
+          this.productoService.delete(id).subscribe({
+            next: () => {
+              this.showAlert('✅ Producto eliminado correctamente', 'success');
+              this.productos = this.productos.filter(p => p.id !== id);
+            },
+            error: (error) => {
+              console.error('Error:', error);
+              this.showAlert('❌ Error al eliminar el producto', 'error');
+            }
+          });
         });
       }
-    }).catch(() => {
-      // Cancelado - no hacer nada
-    });
+    }, 100);
   }
-}
-
-// ✅ MODAL DE CONFIRMACIÓN
-@Component({
-  selector: 'ngbd-modal-confirm',
-  template: `
-    <div class="modal-header">
-      <h5 class="modal-title text-danger">
-        <i class="fas fa-exclamation-triangle mr-2"></i>
-        Confirmar Eliminación
-      </h5>
-      <button type="button" class="close" (click)="activeModal.dismiss()">
-        <span>&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <p class="mb-2">{{message}}</p>
-      <small class="text-muted">Esta acción no se puede deshacer.</small>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" (click)="activeModal.dismiss()">
-        <i class="fas fa-times mr-1"></i> Cancelar
-      </button>
-      <button type="button" class="btn btn-danger" (click)="activeModal.close('confirm')">
-        <i class="fas fa-trash mr-1"></i> Eliminar
-      </button>
-    </div>
-  `
-})
-export class NgbdModalConfirm {
-  @Input() message: string = '¿Estás seguro?';
-
-  constructor(public activeModal: NgbActiveModal) {}
 }

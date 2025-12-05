@@ -1,5 +1,5 @@
 <!-- src/app/modules/gestion/restaurantes-list/restaurantes-list.component.html -->
-<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+<div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
   <div class="container-fluid">
     <div class="header-body">
       <div class="row">
@@ -8,29 +8,12 @@
             <div class="card-body">
               <div class="row">
                 <div class="col">
-                  <h5 class="card-title text-uppercase text-muted mb-0">Total Restaurants</h5>
+                  <h5 class="card-title text-uppercase text-muted mb-0">Total Restaurantes</h5>
                   <span class="h2 font-weight-bold mb-0">{{restaurantes.length}}</span>
                 </div>
                 <div class="col-auto">
-                  <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
+                  <div class="icon icon-shape bg-primary text-white rounded-circle shadow">
                     <i class="fas fa-utensils"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-xl-3 col-lg-6">
-          <div class="card card-stats mb-4 mb-xl-0">
-            <div class="card-body">
-              <div class="row">
-                <div class="col">
-                  <h5 class="card-title text-uppercase text-muted mb-0">Connected</h5>
-                  <span class="h2 font-weight-bold mb-0">{{restaurantes.length}}</span>
-                </div>
-                <div class="col-auto">
-                  <div class="icon icon-shape bg-success text-white rounded-circle shadow">
-                    <i class="fas fa-check"></i>
                   </div>
                 </div>
               </div>
@@ -49,57 +32,53 @@
         <div class="card-header border-0">
           <div class="row align-items-center">
             <div class="col">
-              <h3 class="mb-0">Restaurants</h3>
+              <h3 class="mb-0">Restaurantes</h3>
             </div>
             <div class="col text-right">
               <button class="btn btn-sm btn-primary" (click)="createRestaurante()">
-                <i class="fas fa-plus"></i> New Restaurant
+                <i class="fas fa-plus"></i> Nuevo Restaurante
               </button>
             </div>
           </div>
         </div>
         
-        <div class="table-responsive" *ngIf="!loading">
+        <div class="table-responsive" *ngIf="!loading && restaurantes.length > 0">
           <table class="table align-items-center table-flush">
             <thead class="thead-light">
               <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Address</th>
-                <th scope="col">Phone</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Dirección</th>
+                <th scope="col">Teléfono</th>
                 <th scope="col">Email</th>
-                <th scope="col">Status</th>
-                <th scope="col"></th>
+                <th scope="col">Acciones</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let restaurante of restaurantes">
                 <th scope="row">
                   <div class="media align-items-center">
-                    <a class="avatar rounded-circle mr-3 bg-primary text-white d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                    <div class="avatar rounded-circle mr-3 bg-primary text-white d-flex align-items-center justify-content-center" 
+                         style="width: 48px; height: 48px;">
                       <i class="fas fa-utensils"></i>
-                    </a>
+                    </div>
                     <div class="media-body">
-                      <span class="mb-0 text-sm">{{ restaurante.name }}</span>
+                      <span class="mb-0 text-sm font-weight-bold">{{ restaurante.name }}</span>
                     </div>
                   </div>
                 </th>
-                <td>{{ restaurante.address }}</td>
+                <td>
+                  <span class="text-muted">{{ restaurante.address }}</span>
+                </td>
                 <td>{{ restaurante.phone }}</td>
                 <td>{{ restaurante.email }}</td>
-                <td>
-                  <span class="badge badge-dot mr-4">
-                    <i class="bg-success"></i> Active
-                  </span>
-                </td>
                 <td class="text-right">
-                  <div ngbDropdown placement="bottom-right">
-                    <a class="btn btn-sm btn-icon-only text-light" ngbDropdownToggle>
-                      <i class="fas fa-ellipsis-v"></i>
-                    </a>
-                    <div ngbDropdownMenu class="dropdown-menu-right dropdown-menu-arrow">
-                      <a class="dropdown-item" (click)="editRestaurante(restaurante.id)">Edit</a>
-                      <a class="dropdown-item text-danger" (click)="deleteRestaurante(restaurante.id)">Delete</a>
-                    </div>
+                  <div class="btn-group" role="group" aria-label="Acciones">
+                    <button class="btn btn-sm btn-info mr-1" (click)="editRestaurante(restaurante.id!)">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-sm btn-danger" (click)="deleteRestaurante(restaurante.id!)">
+                      <i class="fas fa-trash"></i>
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -107,17 +86,24 @@
           </table>
         </div>
 
+        <!-- Spinner de carga -->
         <div *ngIf="loading" class="text-center py-4">
-          <div class="spinner-border" role="status">
-            <span class="sr-only">Loading...</span>
+          <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Cargando...</span>
           </div>
+          <p class="mt-2">Cargando restaurantes...</p>
         </div>
 
+        <!-- Mensaje si no hay restaurantes -->
         <div *ngIf="!loading && restaurantes.length === 0" class="text-center py-4">
-          <p class="text-muted">No restaurants registered</p>
-          <button class="btn btn-primary" (click)="createRestaurante()">
-            Create first restaurant
-          </button>
+          <div class="alert alert-info mx-auto" style="max-width: 400px;">
+            <i class="fas fa-info-circle fa-2x mb-3"></i>
+            <h4 class="alert-heading">No hay restaurantes registrados</h4>
+            <p>Comienza registrando tu primer restaurante</p>
+            <button class="btn btn-primary" (click)="createRestaurante()">
+              <i class="fas fa-plus mr-2"></i> Registrar primer restaurante
+            </button>
+          </div>
         </div>
       </div>
     </div>

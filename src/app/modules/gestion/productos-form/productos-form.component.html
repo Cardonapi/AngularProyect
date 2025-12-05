@@ -22,17 +22,18 @@
             <h6 class="heading-small text-muted mb-4">Información del Producto</h6>
             <div class="pl-lg-4">
               
-              <!-- Nombre -->
+              <!-- Nombre y Categoría -->
               <div class="row">
-                <div class="col-lg-12">
+                <div class="col-lg-6">
                   <div class="form-group">
-                    <label class="form-control-label" for="name">Nombre *</label>
+                    <label class="form-control-label" for="name">Nombre del Producto *</label>
                     <input 
                       type="text" 
                       id="name" 
                       class="form-control" 
                       formControlName="name"
-                      placeholder="Nombre del producto">
+                      placeholder="Ej: Hamburguesa Especial"
+                      [class.is-invalid]="productoForm.get('name')?.invalid && productoForm.get('name')?.touched">
                     <div *ngIf="productoForm.get('name')?.invalid && productoForm.get('name')?.touched" 
                          class="text-danger small">
                       <div *ngIf="productoForm.get('name')?.errors?.['required']">
@@ -40,6 +41,53 @@
                       </div>
                       <div *ngIf="productoForm.get('name')?.errors?.['minlength']">
                         Mínimo 2 caracteres
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="category">Categoría *</label>
+                    <select 
+                      id="category" 
+                      class="form-control" 
+                      formControlName="category"
+                      [class.is-invalid]="productoForm.get('category')?.invalid && productoForm.get('category')?.touched">
+                      <option value="" disabled selected>Seleccionar categoría</option>
+                      <option *ngFor="let categoria of categorias" [value]="categoria">
+                        {{ categoria }}
+                      </option>
+                    </select>
+                    <div *ngIf="productoForm.get('category')?.invalid && productoForm.get('category')?.touched" 
+                         class="text-danger small">
+                      La categoría es requerida
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Precio -->
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="price">Precio *</label>
+                    <input 
+                      type="number" 
+                      id="price" 
+                      class="form-control" 
+                      formControlName="price"
+                      placeholder="0.00"
+                      step="0.01"
+                      min="0"
+                      [class.is-invalid]="productoForm.get('price')?.invalid && productoForm.get('price')?.touched">
+                    <div *ngIf="productoForm.get('price')?.invalid && productoForm.get('price')?.touched" 
+                         class="text-danger small">
+                      <div *ngIf="productoForm.get('price')?.errors?.['required']">
+                        El precio es requerido
+                      </div>
+                      <div *ngIf="productoForm.get('price')?.errors?.['min']">
+                        El precio debe ser mayor o igual a 0
                       </div>
                     </div>
                   </div>
@@ -55,8 +103,9 @@
                       id="description" 
                       class="form-control" 
                       formControlName="description"
-                      placeholder="Descripción del producto"
-                      rows="3"></textarea>
+                      rows="3"
+                      placeholder="Descripción detallada del producto..."
+                      [class.is-invalid]="productoForm.get('description')?.invalid && productoForm.get('description')?.touched"></textarea>
                     <div *ngIf="productoForm.get('description')?.invalid && productoForm.get('description')?.touched" 
                          class="text-danger small">
                       <div *ngIf="productoForm.get('description')?.errors?.['required']">
@@ -70,75 +119,50 @@
                 </div>
               </div>
 
-              <!-- Precio y Categoría -->
-              <div class="row">
-                <div class="col-lg-6">
-                  <div class="form-group">
-                    <label class="form-control-label" for="price">Precio *</label>
-                    <div class="input-group">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text">$</span>
-                      </div>
-                      <input 
-                        type="number" 
-                        id="price" 
-                        class="form-control" 
-                        formControlName="price"
-                        placeholder="0.00"
-                        step="0.01"
-                        min="0">
-                    </div>
-                    <div *ngIf="productoForm.get('price')?.invalid && productoForm.get('price')?.touched" 
-                         class="text-danger small">
-                      <div *ngIf="productoForm.get('price')?.errors?.['required']">
-                        El precio es requerido
-                      </div>
-                      <div *ngIf="productoForm.get('price')?.errors?.['min']">
-                        El precio debe ser mayor o igual a 0
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-6">
-                  <div class="form-group">
-                    <label class="form-control-label" for="category">Categoría *</label>
-                    <select 
-                      id="category" 
-                      class="form-control" 
-                      formControlName="category">
-                      <option value="">Seleccionar categoría</option>
-                      <option *ngFor="let categoria of categorias" [value]="categoria">
-                        {{ categoria }}
-                      </option>
-                    </select>
-                    <div *ngIf="productoForm.get('category')?.invalid && productoForm.get('category')?.touched" 
-                         class="text-danger small">
-                      La categoría es requerida
-                    </div>
-                  </div>
-                </div>
-              </div>
-
             </div>
             
             <!-- Botones -->
             <div class="text-center mt-4">
+              <!-- Botón Eliminar (solo en modo edición) -->
+              <button 
+                *ngIf="isEdit"
+                type="button" 
+                class="btn btn-danger mr-2" 
+                (click)="showDeleteConfirmation()"
+                [disabled]="loading">
+                <i class="fas fa-trash mr-1"></i> Eliminar
+              </button>
+              
+              <!-- Botón Cancelar -->
               <button 
                 type="button" 
                 class="btn btn-warning mr-2" 
-                (click)="goBack()">
+                (click)="goBack()"
+                [disabled]="loading">
                 <i class="fas fa-times mr-1"></i> Cancelar
               </button>
+              
+              <!-- Botón Guardar/Actualizar -->
               <button 
                 type="submit" 
                 class="btn btn-primary" 
                 [disabled]="productoForm.invalid || loading">
                 <span *ngIf="loading" class="spinner-border spinner-border-sm mr-2"></span>
-                <i class="fas" [class.fa-save]="!loading" [class.fa-edit]="loading"></i>
+                <i class="fas" [class.fa-save]="!loading" [class.fa-spinner]="loading"></i>
                 {{ isEdit ? 'Actualizar' : 'Crear' }} Producto
               </button>
             </div>
           </form>
+
+          <!-- Spinner de carga -->
+          <div *ngIf="loading" class="text-center py-4">
+            <div class="spinner-border text-primary" role="status">
+              <span class="sr-only">Cargando...</span>
+            </div>
+            <p class="mt-2">
+              {{ isEdit ? 'Actualizando producto...' : 'Creando producto...' }}
+            </p>
+          </div>
         </div>
       </div>
     </div>

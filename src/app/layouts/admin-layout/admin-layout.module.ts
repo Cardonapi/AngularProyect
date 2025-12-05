@@ -6,8 +6,7 @@ import { AdminLayoutRoutes } from './admin-layout.routing';
 
 import { DashboardComponent } from '../../pages/dashboard/dashboard.component';
 import { MapPageComponent } from '../../pages/map/map.component';
-import { UserProfileComponent } from '../../pages/user-profile/user-profile.component';
-import { TablesComponent } from '../../pages/tables/tables.component';
+
 import { GraficasComponent } from '../../pages/graficas/graficas.component';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -33,8 +32,6 @@ import * as echarts from 'echarts';
   ],
   declarations: [
     DashboardComponent,
-    UserProfileComponent,
-    TablesComponent,
     MapPageComponent,
     GraficasComponent
   ]

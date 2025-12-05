@@ -24,20 +24,21 @@
               <div class="row">
                 <div class="col-lg-12">
                   <div class="form-group">
-                    <label class="form-control-label" for="name">Name *</label>
+                    <label class="form-control-label" for="name">Nombre *</label>
                     <input 
                       type="text" 
                       id="name" 
                       class="form-control" 
                       formControlName="name"
-                      placeholder="Restaurant name">
+                      placeholder="Nombre del restaurante"
+                      [class.is-invalid]="restauranteForm.get('name')?.invalid && restauranteForm.get('name')?.touched">
                     <div *ngIf="restauranteForm.get('name')?.invalid && restauranteForm.get('name')?.touched" 
                          class="text-danger small">
                       <div *ngIf="restauranteForm.get('name')?.errors?.['required']">
-                        Name is required
+                        El nombre es requerido
                       </div>
                       <div *ngIf="restauranteForm.get('name')?.errors?.['minlength']">
-                        Minimum 3 characters
+                        Mínimo 3 caracteres
                       </div>
                     </div>
                   </div>
@@ -46,16 +47,17 @@
               <div class="row">
                 <div class="col-lg-12">
                   <div class="form-group">
-                    <label class="form-control-label" for="address">Address *</label>
+                    <label class="form-control-label" for="address">Dirección *</label>
                     <input 
                       type="text" 
                       id="address" 
                       class="form-control" 
                       formControlName="address"
-                      placeholder="Complete address">
+                      placeholder="Dirección completa"
+                      [class.is-invalid]="restauranteForm.get('address')?.invalid && restauranteForm.get('address')?.touched">
                     <div *ngIf="restauranteForm.get('address')?.invalid && restauranteForm.get('address')?.touched" 
                          class="text-danger small">
-                      Address is required
+                      La dirección es requerida
                     </div>
                   </div>
                 </div>
@@ -63,20 +65,21 @@
               <div class="row">
                 <div class="col-lg-6">
                   <div class="form-group">
-                    <label class="form-control-label" for="phone">Phone *</label>
+                    <label class="form-control-label" for="phone">Teléfono *</label>
                     <input 
                       type="text" 
                       id="phone" 
                       class="form-control" 
                       formControlName="phone"
-                      placeholder="Phone number">
+                      placeholder="Número de teléfono"
+                      [class.is-invalid]="restauranteForm.get('phone')?.invalid && restauranteForm.get('phone')?.touched">
                     <div *ngIf="restauranteForm.get('phone')?.invalid && restauranteForm.get('phone')?.touched" 
                          class="text-danger small">
                       <div *ngIf="restauranteForm.get('phone')?.errors?.['required']">
-                        Phone is required
+                        El teléfono es requerido
                       </div>
                       <div *ngIf="restauranteForm.get('phone')?.errors?.['pattern']">
-                        Invalid phone format
+                        Formato de teléfono inválido
                       </div>
                     </div>
                   </div>
@@ -89,38 +92,64 @@
                       id="email" 
                       class="form-control" 
                       formControlName="email"
-                      placeholder="email@example.com">
+                      placeholder="email@ejemplo.com"
+                      [class.is-invalid]="restauranteForm.get('email')?.invalid && restauranteForm.get('email')?.touched">
                     <div *ngIf="restauranteForm.get('email')?.invalid && restauranteForm.get('email')?.touched" 
                          class="text-danger small">
                       <div *ngIf="restauranteForm.get('email')?.errors?.['required']">
-                        Email is required
+                        El email es requerido
                       </div>
                       <div *ngIf="restauranteForm.get('email')?.errors?.['email']">
-                        Invalid email format
+                        Formato de email inválido
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <!-- ELIMINA la sección de "activo" - el backend no lo tiene -->
             </div>
             
+            <!-- Botones -->
             <div class="text-center mt-4">
+              <!-- Botón Eliminar (solo en modo edición) -->
+              <button 
+                *ngIf="isEdit"
+                type="button" 
+                class="btn btn-danger mr-2" 
+                (click)="showDeleteConfirmation()"
+                [disabled]="loading">
+                <i class="fas fa-trash mr-1"></i> Eliminar
+              </button>
+              
+              <!-- Botón Cancelar -->
               <button 
                 type="button" 
                 class="btn btn-warning mr-2" 
-                (click)="goBack()">
-                Cancel
+                (click)="goBack()"
+                [disabled]="loading">
+                <i class="fas fa-times mr-1"></i> Cancelar
               </button>
+              
+              <!-- Botón Guardar/Actualizar -->
               <button 
                 type="submit" 
                 class="btn btn-primary" 
                 [disabled]="restauranteForm.invalid || loading">
                 <span *ngIf="loading" class="spinner-border spinner-border-sm mr-2"></span>
-                {{ isEdit ? 'Update' : 'Create' }} Restaurant
+                <i class="fas" [class.fa-save]="!loading" [class.fa-spinner]="loading"></i>
+                {{ isEdit ? 'Actualizar' : 'Crear' }} Restaurante
               </button>
             </div>
           </form>
+
+          <!-- Spinner de carga -->
+          <div *ngIf="loading" class="text-center py-4">
+            <div class="spinner-border text-primary" role="status">
+              <span class="sr-only">Cargando...</span>
+            </div>
+            <p class="mt-2">
+              {{ isEdit ? 'Actualizando restaurante...' : 'Creando restaurante...' }}
+            </p>
+          </div>
         </div>
       </div>
     </div>
