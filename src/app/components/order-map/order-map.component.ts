@@ -1,4 +1,5 @@
 import { Component, AfterViewInit, NgZone, Input } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import * as L from 'leaflet';
 import { MapService } from '../../shared/services/map.service';
 import { OrderSocketService } from '../../shared/services/order-socket.service';
@@ -22,6 +23,7 @@ export class OrderMapComponent implements AfterViewInit {
     private zone: NgZone,
     private socket: OrderSocketService,
     private sio: OrderSocketIoService,
+    private http: HttpClient,
   ) {}
 
   ngAfterViewInit(): void {
@@ -81,12 +83,13 @@ export class OrderMapComponent implements AfterViewInit {
 
   private initMap(): void {
     if (this.map) return;
-    // Usar un DivIcon con emoji (evita cualquier 404 de imágenes y siempre se ve)
+    // Usar emoji de motocicleta 🏍️ en un DivIcon
+    const html = `<div style="font-size: 32px; line-height: 1; filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.3));">🏍️</div>`;
     this.motoDivIcon = L.divIcon({
-      html: '<div style="font-size: 24px; line-height: 24px">🏍️</div>',
+      html: html,
       className: 'moto-div-icon',
-      iconSize: [24, 24],
-      iconAnchor: [12, 12]
+      iconSize: [32, 32],
+      iconAnchor: [16, 16]
     });
 
     this.map = L.map('orders-map', {
@@ -115,5 +118,22 @@ export class OrderMapComponent implements AfterViewInit {
     } else {
       this.markers[markerKey].setLatLng([o.lat, o.lng]);
     }
+  }
+
+  // --- UI Actions: start/stop tracking without console ---
+  startTracking(): void {
+    const url = `${environment.apiUrl}/motorcycles/track/${this.plate}`;
+    this.http.post(url, {}).subscribe({
+      next: (res) => console.log('[TRACK] start ok', res),
+      error: (err) => console.warn('[TRACK] start error', err)
+    });
+  }
+
+  stopTracking(): void {
+    const url = `${environment.apiUrl}/motorcycles/stop/${this.plate}`;
+    this.http.post(url, {}).subscribe({
+      next: (res) => console.log('[TRACK] stop ok', res),
+      error: (err) => console.warn('[TRACK] stop error', err)
+    });
   }
 }
