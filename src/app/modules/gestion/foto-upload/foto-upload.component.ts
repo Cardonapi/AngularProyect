@@ -1,27 +1,51 @@
 // src/app/modules/gestion/foto-upload/foto-upload.component.ts
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PhotoService } from '../../../shared/services/photo.service';
+import { IssueService } from '../../../shared/services/issue.service';
+import { Issue } from '../../../shared/interfaces/issue.interface';
 
 @Component({
   selector: 'app-foto-upload',
   templateUrl: './foto-upload.component.html'
 })
-export class FotoUploadComponent {
+export class FotoUploadComponent implements OnInit {
   uploadForm: FormGroup;
   loading = false;
   selectedFile: File | null = null;
   previewUrl: string | ArrayBuffer | null = null;
+  incidents: Issue[] = [];
 
   constructor(
     private fb: FormBuilder,
     private photoService: PhotoService,
-    private router: Router
+    private router: Router,
+    private issueService: IssueService
   ) {
     this.uploadForm = this.fb.group({
       issue_id: [null, [Validators.required, Validators.min(1)]],
       description: ['']
+    });
+  }
+
+  ngOnInit(): void {
+    this.loadIncidentes();
+  }
+
+  loadIncidentes(): void {
+    this.issueService.getAll().subscribe({
+      next: (data) => {
+        this.incidents = data || [];
+        // If there's exactly one incidente, preselect it
+        if (this.incidents.length === 1) {
+          this.uploadForm.patchValue({ issue_id: this.incidents[0].id });
+        }
+      },
+      error: (err) => {
+        console.error('Error cargando incidentes', err);
+        this.incidents = [];
+      }
     });
   }
 

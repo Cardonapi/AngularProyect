@@ -20,22 +20,25 @@
             <h6 class="heading-small text-muted mb-4">Información de la Foto</h6>
             <div class="pl-lg-4">
               
-              <!-- Incidente ID -->
+              <!-- Incidente ID (select de incidentes existentes) -->
               <div class="row">
                 <div class="col-lg-12">
                   <div class="form-group">
                     <label class="form-control-label" for="issue_id">ID Incidente *</label>
-                    <input 
-                      type="number" 
-                      id="issue_id" 
-                      class="form-control" 
-                      formControlName="issue_id"
-                      placeholder="ID del incidente relacionado"
-                      min="1">
-                    <div *ngIf="uploadForm.get('issue_id')?.invalid && uploadForm.get('issue_id')?.touched" 
-                         class="text-danger small">
-                      El ID del incidente es requerido
-                    </div>
+                    <!-- Si hay incidentes, mostrar select -->
+                    <ng-container *ngIf="incidents.length > 0; else noIncidentes">
+                      <select id="issue_id" class="form-control" formControlName="issue_id">
+                        <option value="" disabled>Seleccione un incidente...</option>
+                        <option *ngFor="let inc of incidents" [value]="inc.id">#{{inc.id}} - {{ inc.description || (inc.type | titlecase) || 'Incidente' }}</option>
+                      </select>
+                      <div *ngIf="uploadForm.get('issue_id')?.invalid && uploadForm.get('issue_id')?.touched" class="text-danger small">
+                        El ID del incidente es requerido
+                      </div>
+                    </ng-container>
+                    <!-- Mensaje cuando no hay incidentes disponibles -->
+                    <ng-template #noIncidentes>
+                      <div class="alert alert-warning mb-0">No hay incidentes disponibles. Crea un incidente antes de subir una foto.</div>
+                    </ng-template>
                   </div>
                 </div>
               </div>
@@ -108,7 +111,7 @@
               <button 
                 type="submit" 
                 class="btn btn-primary" 
-                [disabled]="uploadForm.invalid || !selectedFile || loading">
+                [disabled]="uploadForm.invalid || !selectedFile || loading || incidents.length === 0">
                 <span *ngIf="loading" class="spinner-border spinner-border-sm mr-2"></span>
                 <i class="fas fa-upload mr-1"></i>
                 Subir Foto
