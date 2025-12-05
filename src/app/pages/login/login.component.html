@@ -23,13 +23,19 @@
         <div class="card-header bg-transparent pb-5">
           <div class="text-muted text-center mt-2 mb-3"><small>Sign in with</small></div>
           <div class="btn-wrapper text-center">
-            <a href="javascript:void(0)" class="btn btn-neutral btn-icon">
+            <a (click)="loginWithGitHub()" class="btn btn-neutral btn-icon" style="cursor: pointer;" [class.disabled]="firebaseAuthService.isLoading">
               <span class="btn-inner--icon"><img src="../assets/img/icons/common/github.svg"></span>
               <span class="btn-inner--text">Github</span>
             </a>
-            <a href="javascript:void(0)" class="btn btn-neutral btn-icon">
+            <a (click)="loginWithGoogle()" class="btn btn-neutral btn-icon" style="cursor: pointer;" [class.disabled]="firebaseAuthService.isLoading">
               <span class="btn-inner--icon"><img src="../assets/img/icons/common/google.svg"></span>
               <span class="btn-inner--text">Google</span>
+            </a>
+            <a (click)="loginWithMicrosoft()" class="btn btn-neutral btn-icon" style="cursor: pointer;" [class.disabled]="firebaseAuthService.isLoading">
+              <span class="btn-inner--icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 23 23"><path fill="#f35325" d="M0 0h11v11H0z"/><path fill="#81bc06" d="M12 0h11v11H12z"/><path fill="#05a6f0" d="M0 12h11v11H0z"/><path fill="#ffba08" d="M12 12h11v11H12z"/></svg>
+              </span>
+              <span class="btn-inner--text">Microsoft</span>
             </a>
           </div>
         </div>
@@ -37,13 +43,13 @@
           <div class="text-center text-muted mb-4">
             <small>Or sign in with credentials</small>
           </div>
-          <form role="form">
+          <form role="form" (ngSubmit)="loginWithCredentials()">
             <div class="form-group mb-3">
               <div class="input-group input-group-alternative">
                 <div class="input-group-prepend">
                   <span class="input-group-text"><i class="ni ni-email-83"></i></span>
                 </div>
-                <input class="form-control" placeholder="Email" type="email">
+                <input [(ngModel)]="email" name="email" class="form-control" placeholder="Email" type="email">
               </div>
             </div>
             <div class="form-group">
@@ -51,17 +57,17 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
                 </div>
-                <input class="form-control" placeholder="Password" type="password">
+                <input [(ngModel)]="password" name="password" class="form-control" placeholder="Password" type="password">
               </div>
             </div>
             <div class="custom-control custom-control-alternative custom-checkbox">
-              <input class="custom-control-input" id=" customCheckLogin" type="checkbox">
-              <label class="custom-control-label" for=" customCheckLogin">
+              <input [(ngModel)]="rememberMe" name="rememberMe" class="custom-control-input" id="customCheckLogin" type="checkbox">
+              <label class="custom-control-label" for="customCheckLogin">
                 <span class="text-muted">Remember me</span>
               </label>
             </div>
             <div class="text-center">
-              <button type="button" class="btn btn-primary my-4">Sign in</button>
+              <button type="submit" class="btn btn-primary my-4">Sign in</button>
             </div>
           </form>
         </div>
