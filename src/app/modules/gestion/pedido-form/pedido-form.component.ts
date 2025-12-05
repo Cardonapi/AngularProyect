@@ -6,6 +6,7 @@ import { OrderService } from '../../../shared/services/order.service';
 import { ClienteService } from '../../../shared/services/cliente.service';
 import { MenuService } from '../../../shared/services/menu.service';
 import { MotorcycleService } from '../../../shared/services/motorcycle.service';
+import { NotificationService } from '../../../shared/services/notification.service';
 import { Order } from '../../../shared/interfaces/order.interface';
 
 interface SelectOption {
@@ -44,6 +45,7 @@ export class PedidoFormComponent implements OnInit {
     private customerService: ClienteService,
     private menuService: MenuService,
     private motorcycleService: MotorcycleService,
+    private notificationService: NotificationService,
     private route: ActivatedRoute,
     private router: Router
   ) {
@@ -199,6 +201,28 @@ export class PedidoFormComponent implements OnInit {
       operation.subscribe({
         next: (response) => {
           this.loading = false;
+          
+          // 🔔 Si es un pedido NUEVO, mostrar notificación con sonido
+          if (!this.isEdit) {
+            const customerId = this.pedidoForm.get('customer_id')?.value;
+            const quantity = this.pedidoForm.get('quantity')?.value;
+            const motorcycleId = this.pedidoForm.get('motorcycle_id')?.value;
+            
+            // Obtener nombre o ID del cliente para la notificación
+            const customerLabel = this.customerOptions.find(c => c.value === customerId)?.label || `Cliente #${customerId}`;
+            // Extraer solo el nombre del cliente (antes del guion)
+            const customerName = customerLabel.split(' - ')[0] || `Cliente #${customerId}`;
+            
+            const motoInfo = motorcycleId 
+              ? this.motorcycleOptions.find(m => m.value === motorcycleId)?.label || 'Moto asignada'
+              : 'Sin asignar';
+            
+            this.notificationService.orderAlert(
+              '🚚 Nuevo Pedido Creado',
+              `${quantity} items | Cliente: ${customerName} | Moto: ${motoInfo}`
+            );
+          }
+          
           alert(`Pedido ${this.isEdit ? 'actualizado' : 'creado'} correctamente`);
           this.router.navigate(['/gestion/pedidos']);
         },

@@ -19,6 +19,8 @@ import { LineDeliveriesPerMonthComponent } from './line-deliveries-per-month/lin
 import { LineIncomePerMonthComponent } from './line-income-per-month/line-income-per-month.component';
 import { LineAvgDeliveryTimeComponent } from './line-avg-delivery-time/line-avg-delivery-time.component';
 import { ChatbotComponent } from './chatbot/chatbot.component';
+import { NotificationToastComponent } from './notification-toast/notification-toast.component';
+import { NotificationContainerComponent } from './notification-container/notification-container.component';
 
 
 @NgModule({
@@ -43,7 +45,9 @@ import { ChatbotComponent } from './chatbot/chatbot.component';
     LineDeliveriesPerMonthComponent, 
     LineIncomePerMonthComponent, 
     LineAvgDeliveryTimeComponent,
-    ChatbotComponent
+    ChatbotComponent,
+    NotificationToastComponent,
+    NotificationContainerComponent
   ],
   exports: [
     FooterComponent,
@@ -59,7 +63,9 @@ import { ChatbotComponent } from './chatbot/chatbot.component';
     LineDeliveriesPerMonthComponent,
     LineIncomePerMonthComponent,
     LineAvgDeliveryTimeComponent,
-    ChatbotComponent
+    ChatbotComponent,
+    NotificationToastComponent,
+    NotificationContainerComponent
   ]
 })
 export class ComponentsModule { }
