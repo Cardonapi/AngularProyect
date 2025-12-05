@@ -19,7 +19,12 @@
             </div>
           </div>
         </div>
-        
+
+        <!-- Mapa en tiempo real -->
+        <div class="px-4 pb-4">
+          <app-order-map [plate]="'ABC124'"></app-order-map>
+        </div>
+
         <div class="table-responsive" *ngIf="!loading">
           <table class="table align-items-center table-flush">
             <thead class="thead-light">

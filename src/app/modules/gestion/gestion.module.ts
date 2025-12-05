@@ -29,7 +29,7 @@ import { DireccionFormComponent } from './direcciones-form/direccion-form.compon
 import { DireccionesListComponent } from './direcciones-list/direcciones-list.component';
 import { FotosListComponent } from './fotos-list/fotos-list.component';
 import { FotoUploadComponent } from './foto-upload/foto-upload.component';
-
+import { ComponentsModule } from '../../components/components.module';
 @NgModule({
   declarations: [
     RestaurantesListComponent,
@@ -61,6 +61,7 @@ import { FotoUploadComponent } from './foto-upload/foto-upload.component';
     RouterModule,
     NgbModule,
     GestionRoutingModule,
+    ComponentsModule
   ]
 })
 export class GestionModule { }

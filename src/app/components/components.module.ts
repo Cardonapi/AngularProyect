@@ -21,6 +21,7 @@ import { LineAvgDeliveryTimeComponent } from './line-avg-delivery-time/line-avg-
 import { ChatbotComponent } from './chatbot/chatbot.component';
 import { NotificationToastComponent } from './notification-toast/notification-toast.component';
 import { NotificationContainerComponent } from './notification-container/notification-container.component';
+import { OrderMapComponent } from './order-map/order-map.component';
 
 
 @NgModule({
@@ -47,7 +48,8 @@ import { NotificationContainerComponent } from './notification-container/notific
     LineAvgDeliveryTimeComponent,
     ChatbotComponent,
     NotificationToastComponent,
-    NotificationContainerComponent
+    NotificationContainerComponent,
+    OrderMapComponent
   ],
   exports: [
     FooterComponent,
@@ -65,7 +67,8 @@ import { NotificationContainerComponent } from './notification-container/notific
     LineAvgDeliveryTimeComponent,
     ChatbotComponent,
     NotificationToastComponent,
-    NotificationContainerComponent
+    NotificationContainerComponent,
+    OrderMapComponent
   ]
 })
 export class ComponentsModule { }

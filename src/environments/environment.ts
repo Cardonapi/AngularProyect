@@ -7,6 +7,7 @@
 export const environment = {
   production: false,
   apiUrl: 'http://localhost:5000',
+  wsUrl: '' as string,
   
   // API Key de Google Gemini
   // Obtén tu key en: https://makersuite.google.com/app/apikey

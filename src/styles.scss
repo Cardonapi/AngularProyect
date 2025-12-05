@@ -1,3 +1,5 @@
+@import "leaflet/dist/leaflet.css";
+
 /* You can add global styles to this file, and also import other style files */
 #map {
   width: 100% !important;
@@ -15,4 +17,20 @@
 
 .card-body {
   overflow: visible !important;
+}
+
+/* Contenedor del mapa embebido en Pedidos */
+#orders-map {
+  width: 100% !important;
+  height: 400px !important;
+  position: relative !important;
+  display: block !important;
+}
+
+/* Asegura que los DivIcon de Leaflet no tengan fondo ni bordes (evita "cuadrados") */
+.leaflet-div-icon,
+.moto-div-icon {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
 }
