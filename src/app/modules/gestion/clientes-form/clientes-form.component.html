@@ -32,16 +32,20 @@
                       id="name" 
                       class="form-control" 
                       formControlName="name"
-                      placeholder="Nombre completo">
+                      placeholder="Nombre completo"
+                      [class.is-invalid]="clienteForm.get('name')?.invalid && clienteForm.get('name')?.touched">
                     <div *ngIf="clienteForm.get('name')?.invalid && clienteForm.get('name')?.touched" 
                          class="text-danger small">
                       <div *ngIf="clienteForm.get('name')?.errors?.['required']">
                         El nombre es requerido
                       </div>
                       <div *ngIf="clienteForm.get('name')?.errors?.['minlength']">
-                        Mínimo 2 caracteres
+                        Mínimo 3 caracteres
                       </div>
                     </div>
+                    <small class="form-text text-muted">
+                      Nombre completo del cliente
+                    </small>
                   </div>
                 </div>
               </div>
@@ -56,7 +60,8 @@
                       id="email" 
                       class="form-control" 
                       formControlName="email"
-                      placeholder="cliente@ejemplo.com">
+                      placeholder="email@ejemplo.com"
+                      [class.is-invalid]="clienteForm.get('email')?.invalid && clienteForm.get('email')?.touched">
                     <div *ngIf="clienteForm.get('email')?.invalid && clienteForm.get('email')?.touched" 
                          class="text-danger small">
                       <div *ngIf="clienteForm.get('email')?.errors?.['required']">
@@ -66,6 +71,9 @@
                         Formato de email inválido
                       </div>
                     </div>
+                    <small class="form-text text-muted">
+                      Correo electrónico del cliente
+                    </small>
                   </div>
                 </div>
                 <div class="col-lg-6">
@@ -76,40 +84,67 @@
                       id="phone" 
                       class="form-control" 
                       formControlName="phone"
-                      placeholder="Número de teléfono">
+                      placeholder="Ej: 3001234567"
+                      [class.is-invalid]="clienteForm.get('phone')?.invalid && clienteForm.get('phone')?.touched">
                     <div *ngIf="clienteForm.get('phone')?.invalid && clienteForm.get('phone')?.touched" 
                          class="text-danger small">
                       <div *ngIf="clienteForm.get('phone')?.errors?.['required']">
                         El teléfono es requerido
                       </div>
                       <div *ngIf="clienteForm.get('phone')?.errors?.['pattern']">
-                        Formato de teléfono inválido
+                        Formato de teléfono inválido. Use números, guiones o paréntesis.
                       </div>
                     </div>
+                    <small class="form-text text-muted">
+                      Número de contacto del cliente
+                    </small>
                   </div>
                 </div>
               </div>
-
             </div>
             
             <!-- Botones -->
             <div class="text-center mt-4">
+              <!-- Botón Eliminar (solo en modo edición) -->
+              <button 
+                *ngIf="isEdit"
+                type="button" 
+                class="btn btn-danger mr-2" 
+                (click)="showDeleteConfirmation()"
+                [disabled]="loading">
+                <i class="fas fa-trash mr-1"></i> Eliminar
+              </button>
+              
+              <!-- Botón Cancelar -->
               <button 
                 type="button" 
                 class="btn btn-warning mr-2" 
-                (click)="goBack()">
+                (click)="goBack()"
+                [disabled]="loading">
                 <i class="fas fa-times mr-1"></i> Cancelar
               </button>
+              
+              <!-- Botón Guardar/Actualizar -->
               <button 
                 type="submit" 
                 class="btn btn-primary" 
                 [disabled]="clienteForm.invalid || loading">
                 <span *ngIf="loading" class="spinner-border spinner-border-sm mr-2"></span>
-                <i class="fas" [class.fa-save]="!loading" [class.fa-edit]="loading"></i>
+                <i class="fas" [class.fa-save]="!loading" [class.fa-spinner]="loading"></i>
                 {{ isEdit ? 'Actualizar' : 'Crear' }} Cliente
               </button>
             </div>
           </form>
+
+          <!-- Spinner de carga -->
+          <div *ngIf="loading" class="text-center py-4">
+            <div class="spinner-border text-primary" role="status">
+              <span class="sr-only">Cargando...</span>
+            </div>
+            <p class="mt-2">
+              {{ isEdit ? 'Actualizando cliente...' : 'Creando cliente...' }}
+            </p>
+          </div>
         </div>
       </div>
     </div>
